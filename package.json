@@ -1,0 +1,39 @@
+{
+  "name": "Boda-Open-CM-WebClient",
+  "description": "Web client for Boda Open CM - An open source vendor agnostic configuration management platform for the Radio Access, Transmission, and Core Network ",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "start": "webpack-dev-server --open"
+  },
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "Bodastage",
+  "contributors": [
+    "Emmanuel Robert Ssebaggala"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.16",
+    "css-loader": "^0.28.4",
+    "csv-loader": "^2.1.1",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "html-webpack-plugin": "^2.30.1",
+    "jquery-ui": "^1.12.1",
+    "raw-loader": "^0.5.1",
+    "style-ext-html-webpack-plugin": "^3.4.1",
+    "style-loader": "^0.18.2",
+    "uglify": "^0.1.5",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.4.1",
+    "xml-loader": "^1.2.1"
+  }
+}

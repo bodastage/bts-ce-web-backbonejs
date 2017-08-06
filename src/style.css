@@ -1,0 +1,248 @@
+/* 
+ * @Author     : Emmanuel Robert Ssebaggala<emmanuel.ssebaggala@bodastage.com>
+*/
+
+/*Top padding for navigation menu*/
+body { 
+    /*padding-top: 65px;*/ 
+}
+
+#bd_wrapper{
+
+}
+
+.footer{
+    position: absolute;
+    bottom: 0px;
+}
+
+/*Fixed width container*/
+ #bd_wrapper .container{
+     max-width: none !important;
+     width: 100%;
+   }
+
+
+ .container{
+     max-width: none !important;
+     width: 100%;
+   }
+   
+
+.bd_app_module_title{
+    
+}
+
+.bd_app_module_title h3 {
+    margin-bottom: 10px;
+}
+
+.bd_app_module_menu{
+    
+}
+
+.bd_app_module_menu{   
+}
+
+.bd_app_module_area{
+    padding-left:10px;
+    padding-right:10px;
+}
+
+
+/**Tabs**/
+#bd_tab_content{
+    margin-top: 5px;
+}
+
+
+/**Sidebar collapsing**/
+.bd_collapse_sidebar {
+    cursor: pointer;
+}
+
+.bd_collapse_module_menu_icon{
+    cursor: pointer;    
+}
+
+
+/*MO Browser*/
+
+#bd_mobrowser_tree_filter{
+    width:100%;
+}
+
+/*Give the vendor and tech select fields the same width	*/
+#bd_mobrowser_select_vendor, #bd_mobrowser_select_tech {
+	width: 150px;
+	margin-top: 2px; /*This needs to be reviewed. The text does not look well algined*/
+}
+
+/*--------------------------------------------------------------------------*/
+/* custom inclusion of right, left and below tabs */
+/*--------------------------------------------------------------------------*/
+.tabs-below > .nav-tabs,
+.tabs-right > .nav-tabs,
+.tabs-left > .nav-tabs {
+  border-bottom: 0;
+}
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+  display: none;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+  display: block;
+}
+
+.tabs-below > .nav-tabs {
+  border-top: 1px solid #ddd;
+}
+
+.tabs-below > .nav-tabs > li {
+  margin-top: -1px;
+  margin-bottom: 0;
+}
+
+.tabs-below > .nav-tabs > li > a {
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+          border-radius: 0 0 4px 4px;
+}
+
+.tabs-below > .nav-tabs > li > a:hover,
+.tabs-below > .nav-tabs > li > a:focus {
+  border-top-color: #ddd;
+  border-bottom-color: transparent;
+}
+
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+  border-color: transparent #ddd #ddd #ddd;
+}
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+  float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+  min-width: 74px;
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+  float: left;
+  margin-right: 19px;
+  border-right: 1px solid #ddd;
+}
+
+.tabs-left > .nav-tabs > li > a {
+  margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+     -moz-border-radius: 4px 0 0 4px;
+          border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+
+.tabs-right > .nav-tabs {
+  float: right;
+  margin-left: 19px;
+  border-left: 1px solid #ddd;
+}
+
+.tabs-right > .nav-tabs > li > a {
+  margin-left: -1px;
+  -webkit-border-radius: 0 4px 4px 0;
+     -moz-border-radius: 0 4px 4px 0;
+          border-radius: 0 4px 4px 0;
+}
+
+.tabs-right > .nav-tabs > li > a:hover,
+.tabs-right > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+}
+
+.tabs-right > .nav-tabs .active > a,
+.tabs-right > .nav-tabs .active > a:hover,
+.tabs-right > .nav-tabs .active > a:focus {
+  border-color: #ddd #ddd #ddd transparent;
+  *border-left-color: #ffffff;
+}
+/*--------------------------------------------------------------------------*/
+/*END OF TABS STYLES*/
+/*--------------------------------------------------------------------------*/
+
+/*Datatables*/
+.dataTables_wrapper table tfoot th input{
+    width: 100%;
+}
+
+.bd-dashboard-icons-text{
+    margin-bottom: 20px;
+}
+
+/*Datatables**/
+table.pretty {
+    width: 100%;
+    clear: both;
+}
+ 
+table.pretty td,
+table.pretty th {
+    padding: 5px;
+    border: 1px solid #fff;
+}
+
+/**
+Created to ensure form select fields are style with bootstrap's .form-control styles
+but with no width value and display set to inline.
+**/
+.bd-form-control {
+display: inline;
+height: 34px;
+padding: 6px 12px;
+font-size: 14px;
+line-height: 1.42857143;
+color: #555;
+background-color: #fff;
+background-image: none;
+border: 1px solid #ccc;
+border-radius: 4px;
+-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.bd-control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+    display: inline-block;
+}
+
+/**
+* 
+*
+**/
+.bd-aciTree-glyphicon{
+	font-family: 'Glyphicons Halflings' !important;
+}
