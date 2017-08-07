@@ -7,11 +7,11 @@ var AppRouter = Backbone.Router.extend({
     }
 });
 
-var modules={};
-    
+var modules = {};
+
 var initialize = function () {
     var appRouter = new AppRouter;
-    
+
     //Load dashboard
     appRouter.on('route:loadDashboard', function () {
         if (typeof modules.dashboard !== 'undefined') {
@@ -48,14 +48,12 @@ var initialize = function () {
 
     //Load network audit module
     appRouter.on('route:loadNetworkAudit', function () {
-        console.log('loadNetworkAudit');
         if (typeof modules.networkaudit !== 'undefined') {
-            modules.networkaudit.reload();
+            modules.networkaudit.render();
         } else {
-            require(['./views/networkaudit_view'], function (NetworkAuditView) {
-                modules.networkaudit = new NetworkAuditView();
-                modules.networkaudit.render();
-            });
+            NetworkAuditView = require('./views/networkaudit_view');
+            modules.networkaudit = new NetworkAuditView();
+            modules.networkaudit.render();
         }
     });
 
@@ -64,11 +62,9 @@ var initialize = function () {
     });
 
     //Show Dashboard by default
-    require(['./views/dashboard_view'], function (DashboardView) {
-        var dashboardView = new DashboardView();
-        modules.dashboard = new DashboardView();
-        modules.dashboard.render();
-    });
+    DashboardView = require('./views/dashboard_view');
+    modules.dashboard = new DashboardView();
+    modules.dashboard.render();
 };
 
 module.exports = initialize;

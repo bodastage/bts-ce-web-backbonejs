@@ -1,6 +1,9 @@
 'use strict';
 
-import dashboardTemplate from 'raw-loader!../templates/dashboard/dashboard.html';
+var dashboardTemplate =  require('raw-loader!../templates/dashboard/dashboard.html');
+var leftPaneTemplate = require('raw-loader!../templates/dashboard/left-pane.html');
+
+const AppUI = require('../libs/app-ui');
 
 var DashboardView = Backbone.View.extend({
     el: '#bd_tab_content > #dashboard_tab',
@@ -24,7 +27,8 @@ var DashboardView = Backbone.View.extend({
         //Left side pane items
         //User left menu
         AppUI.I().ModuleMenuBar().setTitle('<span class="glyphicon glyphicon-home"></span> Dashboard');
-        AppUI.I().getLeftModuleArea().html(_.template(sidePanelTempl));
+        AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
     }
 });
 	
+module.exports = DashboardView;
