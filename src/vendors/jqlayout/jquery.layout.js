@@ -336,18 +336,18 @@ $.layout = {
 		,	s	= 'textSelectionDisabled'
 		,	x	= 'textSelectionInitialized'
 		;
-		if ($.fn.disableSelection) {
-			if (!$d.data(x)) // document hasn't been initialized yet
-				$d.on('mouseup', $.layout.enableTextSelection ).data(x, true);
-			if (!$d.data(s))
-				$d.disableSelection().data(s, true);
-		}
+//		if ($.fn.disableSelection) {
+//			if (!$d.data(x)) // document hasn't been initialized yet
+//				$d.on('mouseup', $.layout.enableTextSelection ).data(x, true);
+//			if (!$d.data(s))
+//				$d.disableSelection().data(s, true);
+//		}
 	}
 ,	enableTextSelection: function () {
 		var $d	= $(document)
 		,	s	= 'textSelectionDisabled';
-		if ($.fn.enableSelection && $d.data(s))
-			$d.enableSelection().data(s, false);
+//		if ($.fn.enableSelection && $d.data(s))
+//			$d.enableSelection().data(s, false);
 	}
 
 
@@ -2500,8 +2500,8 @@ $.fn.layout = function (opts) {
 				.mouseup($.layout.enableTextSelection)		// not really necessary, but just in case
 				.appendTo($N) // append DIV to container
 			;
-			if ($.fn.disableSelection)
-				$R.disableSelection(); // prevent text-selection INSIDE resizer
+//			if ($.fn.disableSelection)
+//				$R.disableSelection(); // prevent text-selection INSIDE resizer
 			if (o.resizerDblClickToggle)
 				$R.bind("dblclick."+ sID, toggle );
 

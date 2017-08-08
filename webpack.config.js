@@ -27,11 +27,12 @@ const config = {
             {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream'},
             {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'},
             {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml'},
-            {test: /tabdrop/, loader: "imports-loader?define=>undefined,exports=>undefined" }
+            {test: /tabdrop/, loader: "imports-loader?define=>undefined,exports=>undefined" },
+            {test: /\.(png|jpg|gif)$/, use: [{loader: 'url-loader',options: {limit: 8192}}]}
         ],
         loaders: [
             {test: /\.css$/, loader: "style-loader!css-loader"},
-            {test: /\.png$/, loader: "url-loader?mimetype=image/png"}
+            //{test: /\.png$/, loader: "url-loader?mimetype=image/png"}
         ]
     },
     plugins: [

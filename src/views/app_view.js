@@ -2,8 +2,9 @@
 
 //The layout template
 const containerTemplate = require('raw-loader!../templates/container.html');
-require('../vendors/jqlayout/jquery.layout');
+const AppUI = require('../libs/app-ui');
 require('style-loader!../vendors/jqlayout/layout-default.css');
+
 
 // Top-level UI.
 var AppView = Backbone.View.extend({
