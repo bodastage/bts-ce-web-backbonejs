@@ -1,8 +1,6 @@
 'use strict';
-//
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-require('./vendors/aciTree/css/aciTree.css');
-require('./vendors/jqueryContextMenu/jquery.contextMenu.css');
 
 require("./style.css");
 require("jquery-ui/ui/widgets/sortable");

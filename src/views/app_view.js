@@ -1,9 +1,9 @@
 'use strict';
 
 //The layout template
+require('style-loader!../vendors/jqlayout/layout-default.css');
 const containerTemplate = require('raw-loader!../templates/container.html');
 const AppUI = require('../libs/app-ui');
-require('style-loader!../vendors/jqlayout/layout-default.css');
 
 
 // Top-level UI.

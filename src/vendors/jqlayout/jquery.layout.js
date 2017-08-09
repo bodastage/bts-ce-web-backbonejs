@@ -2735,7 +2735,7 @@ $.fn.layout = function (opts) {
 				}
 
 			,	stop: function (e, ui) {
-					$('body').enableSelection(); // RE-ENABLE TEXT SELECTION
+					//$('body').enableSelection(); // RE-ENABLE TEXT SELECTION
 					window.defaultStatus = ""; // clear 'resizing limit' message from statusbar
 					$R.removeClass( resizerClass +" "+ resizerPaneClass ); // remove drag classes from Resizer
 					s.isResizing		= false;

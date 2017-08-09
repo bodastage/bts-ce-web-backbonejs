@@ -1,4 +1,7 @@
-require('bootstrap/dist/js/bootstrap.min');
+require('../vendors/aciTree/css/aciTree.css');
+require('../vendors/jqueryContextMenu/jquery.contextMenu.css');
+
+require('imports-loader?this=>window!bootstrap/dist/js/bootstrap.min');
 
 require("jquery-ui/ui/core");
 require("jquery-ui/ui/widgets/draggable");
@@ -7,14 +10,12 @@ require("jquery-ui/ui/effect");
 require("jquery-ui/ui/effects/effect-drop");
 require("jquery-ui/ui/effects/effect-scale");
 
-$.fn.enableSelection  = function(){ return true; };
-$.fn.disableSelection  = function(){ return false; };
+require('imports-loader?this=>window!../vendors/jqlayout/jquery.layout');
 
-require('../vendors/jqlayout/jquery.layout');
+require('imports-loader?this=>window!../vendors/tabdrop/js/bootstrap-tabdrop');
 
-require('../vendors/tabdrop/js/bootstrap-tabdrop');
-require('../vendors/aciTree/js/jquery.aciPlugin.min.js');
-require('../vendors/aciTree/js/jquery.aciTree.min.js');
+require('imports-loader?this=>window!../vendors/aciTree/js/jquery.aciPlugin.min.js');
+require('imports-loader?this=>window!../vendors/aciTree/js/jquery.aciTree.min.js');
 
 
 var AppUI = (function (jQ, window) {
