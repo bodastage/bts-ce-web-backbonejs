@@ -21,7 +21,8 @@ var NetworkAuditView = Backbone.View.extend({
     /**
      * Initialize view
      * 
-     * @returns void
+     * @version 1.0.0
+     * @return void
      */
     initialize: function () {
         this.render();
@@ -30,12 +31,14 @@ var NetworkAuditView = Backbone.View.extend({
     /**
      * Load module dashboard
      *  
-     * @returns void
+     * @version 1.0.0
+     * @return void
      */
     loadDashboard: function () {
         AppUI.I().Tabs().addTab({
             id: this.tabId,
-            title: '<img src="assets/images/discrepancy_black_100.png" width="16px" class="img-icon"/> Network Audit</b>',
+            title: '<img src="assets/images/discrepancy_black_100.png" \
+                width="16px" class="img-icon"/> Network Audit</b>',
             content: AppUI.I().Loading('<h3>Loading network audit module...</h3>')
         });
         AppUI.I().Tabs().show({id: this.tabId});
@@ -56,7 +59,7 @@ var NetworkAuditView = Backbone.View.extend({
         try {
             var aciTreeAPI = $('#bd_auditrules_tree').aciTree({
                 ajax: {
-                    url: '/api/networkaudit/acitree/categories/0',
+                    url: 'http://localhost:8080/api/networkaudit/acitree/categories/0',
                     data: {
                         searchRules: function () {
                             return $(that.$el).find('[name=bd_filter_audit_rules]').is(':checked');
@@ -100,9 +103,27 @@ var NetworkAuditView = Backbone.View.extend({
                 }
             });
 
+            //Trigger search when the rules and category checkboxes are checked
+            $('[name=bd_filter_audit_rules],[name=bd_filter_audit_cats]').on('change', function () {
+                $('#bd_audit_filter').trigger('keyup');
+            });
+
+            //Keyup event on the rule search text field. When the user types some text in the search field
+            //the aciTree is reloaded to show the filtered results.
+            $('#bd_audit_filter').on('keyup', function () {
+                $('#bd_auditrules_tree').aciTree('api').unload(null,
+                    {
+                        success: function () {
+                            $('#bd_auditrules_tree').aciTree('api').ajaxLoad();
+                        }
+                    });
+            });
+
         } catch (err) {
             console.log(err);
         }
+
+
     }
 });
 

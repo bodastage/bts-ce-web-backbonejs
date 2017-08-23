@@ -14,8 +14,12 @@ require('imports-loader?this=>window!../vendors/jqlayout/jquery.layout');
 
 require('imports-loader?this=>window!../vendors/tabdrop/js/bootstrap-tabdrop');
 
+//ACI Tree Plugin
 require('imports-loader?this=>window!../vendors/aciTree/js/jquery.aciPlugin.min.js');
 require('imports-loader?this=>window!../vendors/aciTree/js/jquery.aciTree.min.js');
+
+//contextMenu
+require('../vendors/jqueryContextMenu/jquery.contextMenu.js');
 
 
 var AppUI = (function (jQ, window) {
