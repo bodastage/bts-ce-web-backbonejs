@@ -9,6 +9,14 @@ const appRouter = require('./router');
 const AppUI = require('./libs/app-ui');
 var AppView = require('./views/app_view');
 
+//Include data tables
+$.fn.DataTable = require('datatables.net');
+require('datatables.net-bs');
+
+//require('datatables.net-buttons');
+//11require('datatables.net-buttons-bs');
+
+
 var appView = new AppView();
 
 appRouter();

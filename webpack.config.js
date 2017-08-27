@@ -33,6 +33,8 @@ const config = {
         loaders: [
             {test: /\.css$/, loader: "style-loader!css-loader"},
             //{test: /\.png$/, loader: "url-loader?mimetype=image/png"}
+            {
+          test: /datatables\.net.*/, loader: 'imports?define=>false'}
         ]
     },
     plugins: [

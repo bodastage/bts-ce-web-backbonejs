@@ -3,12 +3,21 @@
 const AppUI = require('../libs/app-ui');
 var dashboardTmpl = require('raw-loader!../templates/networkaudit/dashboard.html');
 var leftPanelTmpl = require('raw-loader!../templates/networkaudit/left-pane.html');
+const rulesTmpl = require('raw-loader!../templates/networkaudit/rule.html');
+var AuditRuleFieldCollection = require('../collections/audit_rule_field_collection');
+//var AuditRuleFieldCollection = require('../models/audit_rule_model');
 
 var NetworkAuditView = Backbone.View.extend({
     el: 'body',
 
     //tab Id for the network audit dashboard
     tabId: 'tab_networkaudit',
+    
+    /**
+     * HTML template for the rules tab
+     */
+    ruleTableTemplate: _.template(rulesTmpl),
+    
     render: function () {
         this.loadDashboard();
         AppUI.I().Tabs().setContent({
@@ -187,9 +196,40 @@ var NetworkAuditView = Backbone.View.extend({
         AppUI.I().Tabs().addTab({
             id: tabId,
             title: 'Loading rule...',
-            content: AppUI.I().Loading('<h3>Loading network audit rule...</h3>')
+            content: this.ruleTableTemplate({ruleName: 'Missing externals'})
+            //content: AppUI.I().Loading('<h3>Loading network audit rule...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});
+        
+        //Construct tr for table header and footer
+        var tr = '';
+        
+        //Get rule fields and create datatable html
+       var auditRuleFieldCollection = new AuditRuleFieldCollection();
+       auditRuleFieldCollection.fetch({
+           success: function(collection){
+               _(collection.models).each(function(model){
+                   tr += '<th>'+model.get('name') + '</th>';
+               });
+               tr = '<tr>' + tr + '</tr>';
+               
+               var ruleDTId = 'rule_dt_' + ruleId;
+               
+               //Build table
+               var tableHtml = '<table id="'+ruleDTId+'" class="table table-striped table-bordered dataTable">';
+               tableHtml += '<thead>' + tr + '</thead>';
+               tableHtml += '<tfoot>' + tr + '</tfoot>';
+               tableHtml += '</table>';
+               
+               //Add html to tab content area
+               $('#'+tabId + ' .rule-datatable').html(tableHtml);
+               
+               //Initiate datatable
+               $('#'+ruleDTId).DataTable();
+           }
+       });
+     
+       
     }
 });
 

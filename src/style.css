@@ -246,3 +246,12 @@ transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 .bd-aciTree-glyphicon{
 	font-family: 'Glyphicons Halflings' !important;
 }
+
+/**
+* Rules
+*/
+.rule-datatable table thead tr th,
+.rule-datatable table tfoot tr th
+{
+    text-transform: uppercase;
+}
