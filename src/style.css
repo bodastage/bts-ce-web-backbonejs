@@ -255,3 +255,17 @@ transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 {
     text-transform: uppercase;
 }
+
+/*Search filter*/
+.rule-datatable .dataTables_filter {
+    float: right;
+}
+
+/*Pagination number*/
+.rule-datatable .dataTables_paginate {
+    float: right;
+}
+
+.rule-datatable tfoot {
+    display: none;
+}

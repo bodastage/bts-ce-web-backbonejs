@@ -225,7 +225,12 @@ var NetworkAuditView = Backbone.View.extend({
                $('#'+tabId + ' .rule-datatable').html(tableHtml);
                
                //Initiate datatable
-               $('#'+ruleDTId).DataTable();
+               $('#'+ruleDTId).DataTable({
+                    "language": {
+                        "zeroRecords": "No matching data found",
+                        "emptyTable": "Audit rule has no data."
+                    },
+               });
            }
        });
      
