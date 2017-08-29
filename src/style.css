@@ -256,6 +256,13 @@ transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     text-transform: uppercase;
 }
 
+/**
+*
+*/
+.rule-datatable table {
+    width: 100%;
+}
+
 /*Search filter*/
 .rule-datatable .dataTables_filter {
     float: right;

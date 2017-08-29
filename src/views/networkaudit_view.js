@@ -5,7 +5,7 @@ var dashboardTmpl = require('raw-loader!../templates/networkaudit/dashboard.html
 var leftPanelTmpl = require('raw-loader!../templates/networkaudit/left-pane.html');
 const rulesTmpl = require('raw-loader!../templates/networkaudit/rule.html');
 var AuditRuleFieldCollection = require('../collections/audit_rule_field_collection');
-//var AuditRuleFieldCollection = require('../models/audit_rule_model');
+var AuditRuleModel = require('../models/audit_rule_model');
 
 var NetworkAuditView = Backbone.View.extend({
     el: 'body',
@@ -196,36 +196,65 @@ var NetworkAuditView = Backbone.View.extend({
         AppUI.I().Tabs().addTab({
             id: tabId,
             title: 'Loading rule...',
-            content: this.ruleTableTemplate({ruleName: 'Missing externals'})
+            content: this.ruleTableTemplate({ruleName: 'Loading ...'})
             //content: AppUI.I().Loading('<h3>Loading network audit rule...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});
         
+        //Get rule details 
+        var auditRuleModel = new AuditRuleModel({id: ruleId});
+        auditRuleModel.fetch({success: function(model,response,options){
+            AppUI.I().Tabs().setTitle({
+                id: tabId,
+                title: model.get("name"),
+            });
+            
+            $('#' + tabId + ' h1').html(model.get("name"));
+
+        }});
+
+        //console.log(auditRuleModel);
+        
         //Construct tr for table header and footer
         var tr = '';
-        
+        var ruleFields = [];
         //Get rule fields and create datatable html
        var auditRuleFieldCollection = new AuditRuleFieldCollection();
        auditRuleFieldCollection.fetch({
            success: function(collection){
+               
                _(collection.models).each(function(model){
                    tr += '<th>'+model.get('name') + '</th>';
+                   ruleFields.push({name:model.get("name"), data: model.get("name")});
                });
                tr = '<tr>' + tr + '</tr>';
                
                var ruleDTId = 'rule_dt_' + ruleId;
                
                //Build table
-               var tableHtml = '<table id="'+ruleDTId+'" class="table table-striped table-bordered dataTable">';
+               var tableHtml = '<table id="'+ruleDTId+'" class="table table-striped table-bordered dataTable" width="100%">';
                tableHtml += '<thead>' + tr + '</thead>';
                tableHtml += '<tfoot>' + tr + '</tfoot>';
                tableHtml += '</table>';
                
                //Add html to tab content area
                $('#'+tabId + ' .rule-datatable').html(tableHtml);
-               
+
                //Initiate datatable
                $('#'+ruleDTId).DataTable({
+                    //"scrollX": true,
+                    "pagingType": 'full_numbers', 
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "url": 'http://localhost:8080/api/networkaudit/rule/dt_data/'+ruleId,
+                        "type": "POST",
+                        'contentType': 'application/json',
+                        'data': function(d) {
+				return JSON.stringify(d);
+			}
+                    },
+                    "columns": ruleFields,
                     "language": {
                         "zeroRecords": "No matching data found",
                         "emptyTable": "Audit rule has no data."
