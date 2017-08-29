@@ -2,6 +2,11 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+/*
+ * Font awesome icons
+ */
+require("font-awesome-webpack");
+
 require("./style.css");
 require("jquery-ui/ui/widgets/sortable");
 
@@ -14,6 +19,8 @@ import './libs/jquery.spring-friendly.js';
 //Include data tables
 $.fn.DataTable = require('datatables.net');
 require('datatables.net-bs');
+require('datatables.net-bs/css/dataTables.bootstrap.css');
+
 
 
 

@@ -209,7 +209,7 @@ var NetworkAuditView = Backbone.View.extend({
                 title: model.get("name"),
             });
             
-            $('#' + tabId + ' h1').html(model.get("name"));
+            $('#' + tabId + ' h2').html(model.get("name"));
 
         }});
 
@@ -241,8 +241,9 @@ var NetworkAuditView = Backbone.View.extend({
                $('#'+tabId + ' .rule-datatable').html(tableHtml);
 
                //Initiate datatable
-               $('#'+ruleDTId).DataTable({
+               var ruleDataTable = $('#'+ruleDTId).DataTable({
                     //"scrollX": true,
+                    //"scrollY": true,
                     "pagingType": 'full_numbers', 
                     "processing": true,
                     "serverSide": true,
@@ -259,6 +260,72 @@ var NetworkAuditView = Backbone.View.extend({
                         "zeroRecords": "No matching data found",
                         "emptyTable": "Audit rule has no data."
                     },
+                    "initComplete": function(){
+                        
+                        //Refresh
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default"><i class="fa fa-refresh"></i></span>');
+                        $('#'+ruleDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                            ruleDataTable.api().ajax.reload();
+                        });
+                        
+                        
+                        //Add evaluation buttion
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <buttion class="btn btn-primary btn-md"><i class="fa fa-play"></i>  Evaluate</button>');
+                        
+                        //Export button
+                        var exportButtonHtml = ' \
+                            <span class="dropdown"> \
+                              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><span class="glyphicon glyphicon-download"></span> Export \
+                              <span class="caret"></span></button> \
+                              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
+                                <li role="presentation"><a role="menuitem" href="#">CSV</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#">Excel</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#">XML</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#">Pdf</a></li> \
+                                <li role="presentation" class="divider"></li> \
+                                <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" /> Zip</a></li> \
+                              </ul> \
+                            </span> ';
+                        
+                       $('#'+ruleDTId + '_wrapper .dataTables_length').append(exportButtonHtml);
+                       
+                       //Columns
+                       var columnLi = '';
+                       for(var i=0; i< ruleFields.length; i++){
+                           columnLi += '<li><a role="menuitem" href="#"><input type="checkbox"/> '+ ruleFields[i].data.toUpperCase()+'</a></>';
+                       }
+                        var columnButtonHtml = ' \
+                            <span class="dropdown"> \
+                              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-th-list"></i> Columns \
+                              <span class="caret"></span></button> \
+                              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> ';
+                        
+                        columnButtonHtml += columnLi;
+                        
+                        columnButtonHtml += '<li role="presentation" class="divider"></li> \
+                                <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" /> All</a></li> \
+                              </ul> \
+                            </span> ';
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(columnButtonHtml);
+                        
+                        //Per column searching
+                         $('#'+ruleDTId + ' thead th').each( function (idx) {
+                             console.log(idx);
+                               var fClass='column-filter-'+idx;
+                                var h = '<span class="glyphicon glyphicon-filter pull-right filter-icon '+fClass+'"></span>';
+                                $(this).addClass('filtering');
+                                $(this).append(h);
+                                
+                                $('#'+ruleDTId + ' thead th span.filter-icon' ).popover({
+                                    ontainer: '.ui-layout-center',
+                                    content: '<div class="filter-column"><input type="text" placeholder="Search..."/></div>',
+                                    title: 'Filter ' + ruleFields[idx].data.toUpperCase(),
+                                    trigger: 'click hover',
+                                    placement: 'bottom',
+                                    html: true
+                                })
+                         } );
+                    }
                });
            }
        });
