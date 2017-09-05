@@ -408,7 +408,7 @@ var AppUI = (function (jQ, window) {
                         jQ('#bd_nav_tab  a[href="#'+options.id+'"]').tab('show');
                     },
                     execDropTab : function(){
-                        console.log('Resized..');
+                        //console.log('Resized..');
                         jQ('.nav-tabs').tabdrop('layout');
                     }
                 }

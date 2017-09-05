@@ -10,13 +10,20 @@ require("font-awesome-webpack");
 require("./style.css");
 require("jquery-ui/ui/widgets/sortable");
 
+//Include drop-tetber 
+window.Tether = require('tether');
+window.Drop = require('tether-drop');
+
+//Popover library
+window.Popper  = require('popper.js').default;
+
 const appRouter = require('./router');
-const AppUI = require('./libs/app-ui');
+window.AppUI = require('./libs/app-ui');
 var AppView = require('./views/app_view');
 
 import './libs/jquery.spring-friendly.js';
 
-//Include data tables
+//Include data tables and bootstramp styles
 $.fn.DataTable = require('datatables.net');
 require('datatables.net-bs');
 require('datatables.net-bs/css/dataTables.bootstrap.css');

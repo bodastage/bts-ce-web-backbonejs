@@ -3,6 +3,7 @@ var AppRouter = Backbone.Router.extend({
         'dashboard': 'loadDashboard', //Load dashboard module
         'help': 'loadHelp',
         'netaudit': 'loadNetworkAudit',
+        'networkinventory': 'loadNetworkInventory',
         "*actions": "defaultRoute"
     }
 });
@@ -57,6 +58,17 @@ var initialize = function () {
         }
     });
 
+    //Load network invetory module
+    appRouter.on('route:loadNetworkInventory', function () {
+        if (typeof modules.networkinventory !== 'undefined') {
+            modules.networkinventory.render();
+        } else {
+            NetworkInventoryView = require('./views/networkinventory_view');
+            modules.networkinventory = new NetworkInventoryView();
+            modules.networkinventory.render();
+        }
+    });
+    
     //Default route
     appRouter.on('route:defaultRoute', function () {
     });

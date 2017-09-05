@@ -1,6 +1,11 @@
 'use strict';
+/**
+ * Network Audit Module User Interface
+ * 
+ * @version 1.0.0
+ * @author Bodastage Solutions
+ */
 
-const AppUI = require('../libs/app-ui');
 var dashboardTmpl = require('raw-loader!../templates/networkaudit/dashboard.html');
 var leftPanelTmpl = require('raw-loader!../templates/networkaudit/left-pane.html');
 const rulesTmpl = require('raw-loader!../templates/networkaudit/rule.html');
@@ -240,7 +245,7 @@ var NetworkAuditView = Backbone.View.extend({
                //Add html to tab content area
                $('#'+tabId + ' .rule-datatable').html(tableHtml);
 
-               //Initiate datatable
+               //Initiate datatable to display rules data
                var ruleDataTable = $('#'+ruleDTId).DataTable({
                     //"scrollX": true,
                     //"scrollY": true,
@@ -260,9 +265,13 @@ var NetworkAuditView = Backbone.View.extend({
                         "zeroRecords": "No matching data found",
                         "emptyTable": "Audit rule has no data."
                     },
+                    "dom": 
+                        "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
                     "initComplete": function(){
                         
-                        //Refresh
+                        //Refresh button
                         $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default"><i class="fa fa-refresh"></i></span>');
                         $('#'+ruleDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
                             ruleDataTable.api().ajax.reload();
@@ -292,10 +301,13 @@ var NetworkAuditView = Backbone.View.extend({
                        //Columns
                        var columnLi = '';
                        for(var i=0; i< ruleFields.length; i++){
-                           columnLi += '<li><a role="menuitem" href="#"><input type="checkbox"/> '+ ruleFields[i].data.toUpperCase()+'</a></>';
+                           columnLi += '<li><a role="menuitem" href="#">\
+                            <input type="checkbox" class="columns-visible" checked="checked" value="'+ i +'"/>'
+                            + ruleFields[i].data.toUpperCase()+'</a></>';
+                           
                        }
                         var columnButtonHtml = ' \
-                            <span class="dropdown"> \
+                            <span class="dropdown column-visible"> \
                               <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-th-list"></i> Columns \
                               <span class="caret"></span></button> \
                               <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> ';
@@ -303,29 +315,117 @@ var NetworkAuditView = Backbone.View.extend({
                         columnButtonHtml += columnLi;
                         
                         columnButtonHtml += '<li role="presentation" class="divider"></li> \
-                                <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" /> All</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" checked="checked" value=""/> All</a></li> \
                               </ul> \
                             </span> ';
                         $('#'+ruleDTId + '_wrapper .dataTables_length').append(columnButtonHtml);
+                        $('#'+ruleDTId + '_wrapper input.columns-visible').click(function(event){
+                            var columnIndex = $(this).val();
+                            console.log(columnIndex);
+                            if( $(this).is(':checked')){
+                                ruleDataTable.api().column(columnIndex).visible(true);
+                            }else{
+                                ruleDataTable.api().column(columnIndex).visible(false);
+                            }
+                        });
                         
                         //Per column searching
                          $('#'+ruleDTId + ' thead th').each( function (idx) {
-                             console.log(idx);
+                                
+                            //Add class to tableHeader    
+                        
+                             
+                             //Advanced search dropdown with bootstrap dropdown menu
+                             //the html
+//                            var advFilterHtml = ' \
+//                                <span class="dropdown pull-right column-filter '+fClass+'"> \
+//                                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-filter"></i> \
+//                                  <span class="caret"></span></button> \
+//                                  <ul class="dropdown-menu" role="menu" aria-labelledby=""> \
+//                                    <li role="presentation">\
+//                                        <div>\
+//                                        aaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa\
+//                                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>\
+//                                        </div>\
+//                                    </li> \
+//                                  </ul> \
+//                                </span> ';
+
+
+                                //Add the filter icon
                                var fClass='column-filter-'+idx;
                                 var h = '<span class="glyphicon glyphicon-filter pull-right filter-icon '+fClass+'"></span>';
                                 $(this).addClass('filtering');
-                                $(this).append(h);
+                                //$(this).append(advFilterHtml);
+                                //$(this).append(h);
                                 
-                                $('#'+ruleDTId + ' thead th span.filter-icon' ).popover({
-                                    ontainer: '.ui-layout-center',
-                                    content: '<div class="filter-column"><input type="text" placeholder="Search..."/></div>',
-                                    title: 'Filter ' + ruleFields[idx].data.toUpperCase(),
-                                    trigger: 'click hover',
-                                    placement: 'bottom',
-                                    html: true
-                                })
-                         } );
-                    }
+                                
+                              //Add advanced filtering with tether-drop  
+//                            var dropInstance = new Drop({
+//                                target: document.querySelector('.'+fClass),
+//                                content: 'Welcome to the future',
+//                                classes: 'drop-theme-arrows',
+//                                position: 'bottom left',
+//                                openOn: 'click'
+//                              });
+                                
+                                //Attach content to tab
+                                //This HTML is meant for the bootstrap popover
+                                var divId = tabId+'_column-filter-html-'+idx;
+                                var filterDivId = tabId+'_column-filter-'+idx;
+                                var popoverHtml = '\
+                                <div class="hidden" id="'+divId+'">\
+                                    <input type="text" placeholder="Search..." value=""/>\
+                                    <div><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>\
+                                </div>\
+                                ';
+                                $('#'+tabId).append(popoverHtml);
+                                
+                                //
+//                                const reference = document.querySelector('.'+fClass);
+//                                const popper = document.querySelector('#'+divId);
+//                                new Popper(reference, popper, {});
+                                
+//                                
+//                                $('.'+fClass ).popover({
+//                                    container: '#'+fClass,
+//                                    viewport: {'selector':'.ui-layout-center', padding: 0},
+//                                    content: function(){
+//                                        return '<div id="'+filterDivId+'">' + $('#'+divId).html() + '</div>';
+//                                    },
+//                                    title: 'Filter ' + ruleFields[idx].data.toUpperCase(),
+//                                    trigger: 'click hover',
+//                                    placement: 'bottom',
+//                                    html: true
+//                                });
+                                
+//                                $('.'+fClass).on('hide.bs.popover', function(){
+//                                    console.log($('#'+filterDivId).html());
+//                                });
+
+                         } ); //end of foearch
+                         
+   
+
+                        //Add settings icons 
+                        var btnSettingsHtml = '<span class="btn btn-default"><i class="fa fa-cog"></i> Configuration</span>';
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(btnSettingsHtml);
+                        
+                        //Count graph
+                        var btnCountHtml = ' \
+                            <span class="dropdown"> \
+                              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-history"></i> Count \
+                              <span class="caret"></span></button> \
+                              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
+                                <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-th-list"></i> Table</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-area-chart"></i> Gragh</a></li> \
+                              </ul> \
+                            </span> ';
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(btnCountHtml);
+                                                                
+    
+
+                    }//eof: initComplete
                });
            }
        });
