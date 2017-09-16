@@ -2,7 +2,7 @@
 
 //The layout template
 require('style-loader!../vendors/jqlayout/layout-default.css');
-const containerTemplate = require('raw-loader!../templates/container.html');
+const containerTemplate = require('html-loader!../templates/container.html');
 const AppUI = require('../libs/app-ui');
 
 

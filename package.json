@@ -23,6 +23,8 @@
     "datatables.net": "^1.10.15",
     "datatables.net-bs": "^1.10.15",
     "popper.js": "^1.12.5",
+    "sockjs": "^0.3.18",
+    "stompjs": "^2.3.3",
     "tether": "^1.4.0",
     "tether-drop": "^1.4.2"
   },
@@ -33,6 +35,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "font-awesome-webpack": "0.0.5-beta.2",
+    "html-loader": "^0.5.1",
     "html-webpack-plugin": "^2.30.1",
     "jquery-ui": "^1.12.1",
     "raw-loader": "^0.5.1",

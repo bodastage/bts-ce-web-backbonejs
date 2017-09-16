@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 require("font-awesome-webpack");
 
 require("./style.css");
+
+//Add sorting to taps
 require("jquery-ui/ui/widgets/sortable");
 
 //Include drop-tetber 
@@ -21,6 +23,8 @@ const appRouter = require('./router');
 window.AppUI = require('./libs/app-ui');
 var AppView = require('./views/app_view');
 
+
+
 import './libs/jquery.spring-friendly.js';
 
 //Include data tables and bootstramp styles
@@ -28,22 +32,15 @@ $.fn.DataTable = require('datatables.net');
 require('datatables.net-bs');
 require('datatables.net-bs/css/dataTables.bootstrap.css');
 
-
-
-
-
-//require('datatables.net-buttons');
-//11require('datatables.net-buttons-bs');
-
-
 var appView = new AppView();
 
 appRouter();
 
 Backbone.history.start();
 
-    //Initiailzie Tabdrop
+//Initiailzie Tabdrop
 AppUI.I().Tabs().closeTabEvent();
 AppUI.I().Tabs().initTabDrop();
 
+//Enable sorting of tabs
 $('#bd_nav_tab').sortable();

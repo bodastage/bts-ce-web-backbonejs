@@ -1,7 +1,7 @@
 'use strict';
 
-var dashboardTemplate =  require('raw-loader!../templates/dashboard/dashboard.html');
-var leftPaneTemplate = require('raw-loader!../templates/dashboard/left-pane.html');
+var dashboardTemplate =  require('html-loader!../templates/dashboard/dashboard.html');
+var leftPaneTemplate = require('html-loader!../templates/dashboard/left-pane.html');
 
 const AppUI = require('../libs/app-ui');
 

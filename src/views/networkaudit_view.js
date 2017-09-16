@@ -6,11 +6,12 @@
  * @author Bodastage Solutions
  */
 
-var dashboardTmpl = require('raw-loader!../templates/networkaudit/dashboard.html');
-var leftPanelTmpl = require('raw-loader!../templates/networkaudit/left-pane.html');
+var dashboardTmpl = require('html-loader!../templates/networkaudit/dashboard.html');
+var leftPanelTmpl = require('html-loader!../templates/networkaudit/left-pane.html');
 const rulesTmpl = require('raw-loader!../templates/networkaudit/rule.html');
 var AuditRuleFieldCollection = require('../collections/audit_rule_field_collection');
 var AuditRuleModel = require('../models/audit_rule_model');
+const moduleIcon = require('../images/discrepancy_black_100.png');
 
 var NetworkAuditView = Backbone.View.extend({
     el: 'body',
@@ -51,7 +52,7 @@ var NetworkAuditView = Backbone.View.extend({
     loadDashboard: function () {
         AppUI.I().Tabs().addTab({
             id: this.tabId,
-            title: '<img src="assets/images/discrepancy_black_100.png" \
+            title: '<img src="'+moduleIcon+'" \
                 width="16px" class="img-icon"/> Network Audit</b>',
             content: AppUI.I().Loading('<h3>Loading network audit module...</h3>')
         });
@@ -65,7 +66,7 @@ var NetworkAuditView = Backbone.View.extend({
      */
     loadLeftPane: function () {
         var that = this;
-        AppUI.I().ModuleMenuBar().setTitle('<img src="assets/images/discrepancy_black_100.png" width="32px" class="img-icon"/> Network Audit	');
+        AppUI.I().ModuleMenuBar().setTitle('<img src="'+moduleIcon+'" width="32px" class="img-icon"/> Network Audit	');
 
         AppUI.I().getLeftModuleArea().html(leftPanelTmpl);
 
@@ -287,7 +288,7 @@ var NetworkAuditView = Backbone.View.extend({
                               <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><span class="glyphicon glyphicon-download"></span> Export \
                               <span class="caret"></span></button> \
                               <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
-                                <li role="presentation"><a role="menuitem" href="#">CSV</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#" data-index="'+ruleId+'" class="export-csv">CSV</a></li> \
                                 <li role="presentation"><a role="menuitem" href="#">Excel</a></li> \
                                 <li role="presentation"><a role="menuitem" href="#">XML</a></li> \
                                 <li role="presentation"><a role="menuitem" href="#">Pdf</a></li> \
@@ -295,9 +296,13 @@ var NetworkAuditView = Backbone.View.extend({
                                 <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" /> Zip</a></li> \
                               </ul> \
                             </span> ';
-                        
                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(exportButtonHtml);
-                       
+                       $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','li > a.export-csv',function(){
+                           console.log($(this).data('index'));
+                           $.get('http://localhost:8080/api/networkaudit/rule/export/'+1, {}, function(data){
+                               console.log(data);
+                           });
+                       });
                        //Columns
                        var columnLi = '';
                        for(var i=0; i< ruleFields.length; i++){
