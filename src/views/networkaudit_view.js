@@ -8,7 +8,8 @@
 
 var dashboardTmpl = require('html-loader!../templates/networkaudit/dashboard.html');
 var leftPanelTmpl = require('html-loader!../templates/networkaudit/left-pane.html');
-const rulesTmpl = require('raw-loader!../templates/networkaudit/rule.html');
+const rulesTmpl = require('html-loader!../templates/networkaudit/rule.html');
+const rulesGraphTmpl = require('raw-loader!../templates/networkaudit/rule-count-graph.html');
 var AuditRuleFieldCollection = require('../collections/audit_rule_field_collection');
 var AuditRuleModel = require('../models/audit_rule_model');
 const moduleIcon = require('../images/discrepancy_black_100.png');
@@ -53,7 +54,7 @@ var NetworkAuditView = Backbone.View.extend({
         AppUI.I().Tabs().addTab({
             id: this.tabId,
             title: '<img src="'+moduleIcon+'" \
-                width="16px" class="img-icon"/> Network Audit</b>',
+                width="16px" class="img-icon"/> Network Audit',
             content: AppUI.I().Loading('<h3>Loading network audit module...</h3>')
         });
         AppUI.I().Tabs().show({id: this.tabId});
@@ -207,15 +208,20 @@ var NetworkAuditView = Backbone.View.extend({
         });
         AppUI.I().Tabs().show({id: tabId});
         
+        var ruleName = "";
         //Get rule details 
         var auditRuleModel = new AuditRuleModel({id: ruleId});
         auditRuleModel.fetch({success: function(model,response,options){
+            var tabTitle =  '<img src="'+moduleIcon+'" \
+                width="16px" class="img-icon"/> ' + 
+                model.get("name");
             AppUI.I().Tabs().setTitle({
                 id: tabId,
-                title: model.get("name"),
+                title: tabTitle
             });
             
-            $('#' + tabId + ' h2').html(model.get("name"));
+            ruleName = model.get("name");
+            $('#' + tabId + ' h3').html('<img src="'+moduleIcon+'" width="25px"/> ' + ruleName);
 
         }});
 
@@ -289,16 +295,16 @@ var NetworkAuditView = Backbone.View.extend({
                               <span class="caret"></span></button> \
                               <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
                                 <li role="presentation"><a role="menuitem" href="#" data-index="'+ruleId+'" class="export-csv">CSV</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#">Excel</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#">XML</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#">Pdf</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#"> Excel</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#"> XML</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#"> Pdf</a></li> \
                                 <li role="presentation" class="divider"></li> \
                                 <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" /> Zip</a></li> \
                               </ul> \
                             </span> ';
                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(exportButtonHtml);
                        $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','li > a.export-csv',function(){
-                           console.log($(this).data('index'));
+                            $('#'+tabId+ ' .bd-notice').html(AppUI.I().Loading('Exporting csv...'));
                            $.get('http://localhost:8080/api/networkaudit/rule/export/'+1, {}, function(data){
                                console.log(data);
                            });
@@ -307,7 +313,7 @@ var NetworkAuditView = Backbone.View.extend({
                        var columnLi = '';
                        for(var i=0; i< ruleFields.length; i++){
                            columnLi += '<li><a role="menuitem" href="#">\
-                            <input type="checkbox" class="columns-visible" checked="checked" value="'+ i +'"/>'
+                            <input type="checkbox" class="columns-visible" checked="checked" value="'+ i +'"/> '
                             + ruleFields[i].data.toUpperCase()+'</a></>';
                            
                        }
@@ -423,11 +429,14 @@ var NetworkAuditView = Backbone.View.extend({
                               <span class="caret"></span></button> \
                               <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
                                 <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-th-list"></i> Table</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-area-chart"></i> Gragh</a></li> \
+                                <li role="presentation"><a role="menuitem" href="#" class="rule-count-graph"><i class="fa fa-area-chart "></i> Gragh</a></li> \
                               </ul> \
                             </span> ';
                         $('#'+ruleDTId + '_wrapper .dataTables_length').append(btnCountHtml);
-                                                                
+                        $('#'+ruleDTId + '_wrapper .rule-count-graph').click(function(event){
+                            console.log('Testing...');
+                            that.loadCoundGraph({ruleId: ruleId, ruleName: ruleName, ruleTabId: tabId });
+                        });                                            
     
 
                     }//eof: initComplete
@@ -436,6 +445,52 @@ var NetworkAuditView = Backbone.View.extend({
        });
      
        
+    },
+    
+    /**
+     * Rule count graph
+     */
+    loadCoundGraph: function(options){
+        var that = this;
+        var tabId = options.ruleTabId + '_graph';
+        var ruleId = options.ruleId;
+        var ruleName = options.ruleName;
+        var ruleCountGraphDiv = tabId+'_graph_id';
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-area-chart "></i> ' + ruleName,
+            content: _.template(rulesGraphTmpl)({
+                ruleName: '<i class="fa fa-area-chart "></i> ' + ruleName,
+                ruleCountGraphId: ruleCountGraphDiv})
+            //content: AppUI.I().Loading('<h3>Loading count graph</h3>')
+        });
+        
+        //Graph
+        var trace1 = {
+          x: [1, 2, 3, 4],
+          y: [10, 15, 13, 17],
+          mode: 'markers'
+        };
+
+        var trace2 = {
+          x: [2, 3, 4, 5],
+          y: [16, 5, 11, 9],
+          mode: 'lines'
+        };
+
+        var trace3 = {
+          x: [1, 2, 3, 4],
+          y: [12, 9, 15, 12],
+          mode: 'lines+markers'
+        };
+
+        var data = [ trace1, trace2, trace3 ];
+
+        var layout = {
+          title:'Line and Scatter Plot'
+        };
+        Plotly.newPlot(ruleCountGraphDiv , data, layout);
     }
 });
 
