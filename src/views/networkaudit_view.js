@@ -260,7 +260,7 @@ var NetworkAuditView = Backbone.View.extend({
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        "url": 'http://localhost:8080/api/networkaudit/rule/dt_data/'+ruleId,
+                        "url": API_URL + '/api/networkaudit/rule/dt_data/'+ruleId,
                         "type": "POST",
                         'contentType': 'application/json',
                         'data': function(d) {
@@ -305,8 +305,23 @@ var NetworkAuditView = Backbone.View.extend({
                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(exportButtonHtml);
                        $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','li > a.export-csv',function(){
                             $('#'+tabId+ ' .bd-notice').html(AppUI.I().Loading('Exporting csv...'));
-                           $.get('http://localhost:8080/api/networkaudit/rule/export/'+1, {}, function(data){
-                               console.log(data);
+                           $.get(API_URL + '/api/networkaudit/rule/export/'+1, {}, function(data){
+                               if(data.status === 'COMPLETED'){
+                                   var meta = JSON.parse(data.meta);
+                                   
+                                   var successHtml = '<i class="fa fa-download"></i> File generated successfully. Download fie: <a href="'+API_URL+'/api/networkaudit/download/'+meta.file_name+'" target="_blank">' + meta.file_name + "</a>";
+                                   $('#'+tabId+ ' .bd-notice').html(AppUI.I().Alerts({close: true}).Success(successHtml));
+                               }else if(meta.status === 'PENDING'){ //If export generation status is pending, waiting and check again
+                                   /**
+                                   var tryExportAgain = function(){
+                                       
+                                       setTimeOut(3000, tryExportAgain);
+                                   }
+                                   tryExportAgain();
+                                   **/
+                               }else{ //Failed to generated export file.
+                                    $('#'+tabId+ ' .bd-notice').html(AppUI.I().Alerts({close: true}).Error('Failed to generate export file!'));
+                               }
                            });
                        });
                        //Columns

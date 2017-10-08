@@ -3,6 +3,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 const config = {
     entry: [
@@ -47,9 +48,11 @@ const config = {
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
             title: 'Boda Telecom Suite - CE',
+            //favicon: __dirname + '/images/favicon.ico',
             template: __dirname + '/src/index.html'
         }),
-        //new ExtractTextPlugin("styles.css")
+        //new ExtractTextPlugin("styles.css"),
+        new FaviconsWebpackPlugin('./src/images/antenna_blue_64.png')
     ]
 };
 

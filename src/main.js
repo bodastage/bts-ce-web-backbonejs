@@ -58,24 +58,26 @@ Backbone.history.start();
 AppUI.I().Tabs().closeTabEvent();
 AppUI.I().Tabs().initTabDrop();
 
+//Set url
+window.API_URL = 'http://localhost:8080';
+
 //Enable sorting of tabs
 $('#bd_nav_tab').sortable();
 
-
-window.Stomp = require('stompjs');
-window.SockJS = require('sockjs-client');
-var socket = new SockJS('http://localhost:8080/websocket');
-var stompClient = Stomp.over(socket);
- socket.onopen = function() {
-     console.log('open');
-     sock.send('test');
- };
-
- socket.onmessage = function(e) {
-     console.log('message', e.data);
-     sock.close();
- };
-
- socket.onclose = function() {
-     console.log('close');
- };
+//window.Stomp = require('stompjs');
+//window.SockJS = require('sockjs-client');
+//var socket = new SockJS('http://localhost:8080/websocket');
+//var stompClient = Stomp.over(socket);
+// socket.onopen = function() {
+//     console.log('open');
+//     socket.send('test');
+// };
+//
+// socket.onmessage = function(e) {
+//     console.log('message', e.data);
+//     socket.close();
+// };
+//
+// socket.onclose = function() {
+//     console.log('close');
+// };
