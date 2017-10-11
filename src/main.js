@@ -1,11 +1,13 @@
 'use strict';
 
+/**
+ * Import bootstrap css
+ */
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 /*
- * Include font awesome
+ * Include Font awesome icons
  * 
- * Font awesome icons
  */
 require("font-awesome-webpack");
 
@@ -26,8 +28,9 @@ require("./style.css");
 require("jquery-ui/ui/widgets/sortable");
 
 //Include drop-tetber 
-//window.Tether = require('tether');
-//window.Drop = require('tether-drop');
+window.Tether = require('tether');
+window.Drop = require('tether-drop');
+require('tether-drop/dist/css/drop-theme-arrows.css');
 
 //Popover library
 //window.Popper  = require('popper.js').default;
@@ -47,6 +50,9 @@ import './libs/jquery.spring-friendly.js';
 $.fn.DataTable = require('datatables.net');
 require('datatables.net-bs');
 require('datatables.net-bs/css/dataTables.bootstrap.css');
+
+//Add jquery datatables column re-order plug -in
+require( 'datatables.net-colreorder' );
 
 var appView = new AppView();
 

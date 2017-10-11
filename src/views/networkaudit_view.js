@@ -232,6 +232,9 @@ var NetworkAuditView = Backbone.View.extend({
         var ruleFields = [];
         //Get rule fields and create datatable html
        var auditRuleFieldCollection = new AuditRuleFieldCollection();
+       
+       //Set the rule id in the collections url
+       auditRuleFieldCollection.url = auditRuleFieldCollection.url + ruleId;
        auditRuleFieldCollection.fetch({
            success: function(collection){
                
@@ -259,6 +262,7 @@ var NetworkAuditView = Backbone.View.extend({
                     "pagingType": 'full_numbers', 
                     "processing": true,
                     "serverSide": true,
+                     colReorder: true,
                     "ajax": {
                         "url": API_URL + '/api/networkaudit/rule/dt_data/'+ruleId,
                         "type": "POST",
@@ -284,54 +288,61 @@ var NetworkAuditView = Backbone.View.extend({
                             ruleDataTable.api().ajax.reload();
                         });
                         
+                        //Add evaluation button
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <buttion class="btn btn-primary btn-md bd-evaluate"><i class="fa fa-play"></i>  Evaluate</button>');
                         
-                        //Add evaluation buttion
-                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <buttion class="btn btn-primary btn-md"><i class="fa fa-play"></i>  Evaluate</button>');
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','.bd-evaluate',function(){
+                            $('#'+tabId+ ' .bd-notice').html(AppUI.I().Loading('Evaluating rule...'));
+                            $.get(API_URL + '/api/networkaudit/rule/evaluate/'+ruleId, {}, function(data){
+                                console.log(data);
+                            });
+                        });
                         
                         //Export button
+                        //@TODO: Add option to zip file
+                        //@TODO: Add other export file formats like Excel
                         var exportButtonHtml = ' \
                             <span class="dropdown"> \
                               <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><span class="glyphicon glyphicon-download"></span> Export \
                               <span class="caret"></span></button> \
                               <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
                                 <li role="presentation"><a role="menuitem" href="#" data-index="'+ruleId+'" class="export-csv">CSV</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#"> Excel</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#"> XML</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#"> Pdf</a></li> \
-                                <li role="presentation" class="divider"></li> \
-                                <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" /> Zip</a></li> \
                               </ul> \
                             </span> ';
                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(exportButtonHtml);
                        $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','li > a.export-csv',function(){
                             $('#'+tabId+ ' .bd-notice').html(AppUI.I().Loading('Exporting csv...'));
-                           $.get(API_URL + '/api/networkaudit/rule/export/'+1, {}, function(data){
+                            $.get(API_URL + '/api/networkaudit/rule/export/'+ruleId, {}, function(data){
                                if(data.status === 'COMPLETED'){
                                    var meta = JSON.parse(data.meta);
                                    
                                    var successHtml = '<i class="fa fa-download"></i> File generated successfully. Download fie: <a href="'+API_URL+'/api/networkaudit/download/'+meta.file_name+'" target="_blank">' + meta.file_name + "</a>";
                                    $('#'+tabId+ ' .bd-notice').html(AppUI.I().Alerts({close: true}).Success(successHtml));
-                               }else if(meta.status === 'PENDING'){ //If export generation status is pending, waiting and check again
+                               }else if( meta.status === 'PENDING'){ //If export generation status is pending, waiting and check again
                                    /**
                                    var tryExportAgain = function(){
-                                       
                                        setTimeOut(3000, tryExportAgain);
                                    }
                                    tryExportAgain();
                                    **/
                                }else{ //Failed to generated export file.
-                                    $('#'+tabId+ ' .bd-notice').html(AppUI.I().Alerts({close: true}).Error('Failed to generate export file!'));
+                                    $('#'+tabId+ ' .bd-notice')
+                                        .html(
+                                            AppUI.I().Alerts({close: true})
+                                                .Error('Failed to generate export file!')
+                                        );
                                }
                            });
                        });
-                       //Columns
-                       var columnLi = '';
-                       for(var i=0; i< ruleFields.length; i++){
+                       
+                        //Columns
+                        var columnLi = '';
+                        for(var i=0; i< ruleFields.length; i++){
                            columnLi += '<li><a role="menuitem" href="#">\
                             <input type="checkbox" class="columns-visible" checked="checked" value="'+ i +'"/> '
                             + ruleFields[i].data.toUpperCase()+'</a></>';
-                           
-                       }
+                        }
+                       
                         var columnButtonHtml = ' \
                             <span class="dropdown column-visible"> \
                               <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-th-list"></i> Columns \
@@ -347,7 +358,6 @@ var NetworkAuditView = Backbone.View.extend({
                         $('#'+ruleDTId + '_wrapper .dataTables_length').append(columnButtonHtml);
                         $('#'+ruleDTId + '_wrapper input.columns-visible').click(function(event){
                             var columnIndex = $(this).val();
-                            console.log(columnIndex);
                             if( $(this).is(':checked')){
                                 ruleDataTable.api().column(columnIndex).visible(true);
                             }else{
@@ -355,80 +365,40 @@ var NetworkAuditView = Backbone.View.extend({
                             }
                         });
                         
-                        //Per column searching
+                        //Per column filtering options
                          $('#'+ruleDTId + ' thead th').each( function (idx) {
                                 
-                            //Add class to tableHeader    
-                        
+                             //Advanced search dropdown with bootstrap dropdown menU
+                            //Implement per column filtering options
+                            //Add the filter icon
+                            var fClass='column-filter-'+idx;
+                            var h = '<span class="glyphicon glyphicon-filter pull-right filter-icon '+fClass+'"></span>';
+                            $(this).addClass('filtering');
+                            //$(this).append(advFilterHtml);
+                            $(this).append(h);
+
+                            //Tether drop
+                            //Add advanced filtering with tether-drop
+                            var divId = tabId+'_column-filter-html-'+idx;
+                            var advancedFilterHtml = '\
+                            <div class="" id="'+divId+'">\
+                                <input type="text" placeholder="Search..." value="" class="form-control per-column-search"/>\
+                                <div></div>\
+                            </div>\
+                            ';
                              
-                             //Advanced search dropdown with bootstrap dropdown menu
-                             //the html
-//                            var advFilterHtml = ' \
-//                                <span class="dropdown pull-right column-filter '+fClass+'"> \
-//                                  <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-filter"></i> \
-//                                  <span class="caret"></span></button> \
-//                                  <ul class="dropdown-menu" role="menu" aria-labelledby=""> \
-//                                    <li role="presentation">\
-//                                        <div>\
-//                                        aaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa\
-//                                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>\
-//                                        </div>\
-//                                    </li> \
-//                                  </ul> \
-//                                </span> ';
-
-
-                                //Add the filter icon
-                               var fClass='column-filter-'+idx;
-                                var h = '<span class="glyphicon glyphicon-filter pull-right filter-icon '+fClass+'"></span>';
-                                $(this).addClass('filtering');
-                                //$(this).append(advFilterHtml);
-                                //$(this).append(h);
+                            var dropInstance = new Drop({
+                                target: document.querySelector('.'+fClass),
+                                content: advancedFilterHtml,
+                                classes: 'drop-theme-arrows',
+                                position: 'bottom center',
+                                openOn: 'click'
+                              });
                                 
-                                
-                              //Add advanced filtering with tether-drop  
-//                            var dropInstance = new Drop({
-//                                target: document.querySelector('.'+fClass),
-//                                content: 'Welcome to the future',
-//                                classes: 'drop-theme-arrows',
-//                                position: 'bottom left',
-//                                openOn: 'click'
-//                              });
-                                
-                                //Attach content to tab
-                                //This HTML is meant for the bootstrap popover
-                                var divId = tabId+'_column-filter-html-'+idx;
-                                var filterDivId = tabId+'_column-filter-'+idx;
-                                var popoverHtml = '\
-                                <div class="hidden" id="'+divId+'">\
-                                    <input type="text" placeholder="Search..." value=""/>\
-                                    <div><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>\
-                                </div>\
-                                ';
-                                $('#'+tabId).append(popoverHtml);
-                                
-                                //
-//                                const reference = document.querySelector('.'+fClass);
-//                                const popper = document.querySelector('#'+divId);
-//                                new Popper(reference, popper, {});
-                                
-//                                
-//                                $('.'+fClass ).popover({
-//                                    container: '#'+fClass,
-//                                    viewport: {'selector':'.ui-layout-center', padding: 0},
-//                                    content: function(){
-//                                        return '<div id="'+filterDivId+'">' + $('#'+divId).html() + '</div>';
-//                                    },
-//                                    title: 'Filter ' + ruleFields[idx].data.toUpperCase(),
-//                                    trigger: 'click hover',
-//                                    placement: 'bottom',
-//                                    html: true
-//                                });
-                                
-//                                $('.'+fClass).on('hide.bs.popover', function(){
-//                                    console.log($('#'+filterDivId).html());
-//                                });
-
+                            $('body').on('input', '.per-column-search', function(){
+                                console.log( $(this).val());
+                                ruleDataTable.api().column(idx).search($(this).val()).draw();
+                            });
                          } ); //end of foearch
                          
    

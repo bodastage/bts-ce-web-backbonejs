@@ -32,6 +32,7 @@ var AppView = Backbone.View.extend({
                 resizable: false,
                 size: '50',
                 onopen_end: function () {
+                    Tether.position();
                 },
             },
             south: {
@@ -41,11 +42,13 @@ var AppView = Backbone.View.extend({
                 size: '300',
                 onresize_end: function () {
                     AppUI.I().Tabs().execDropTab();
+                    Tether.position();
                 }
             },
             center: {
                 onresize_end: function () {
                     AppUI.I().Tabs().execDropTab();
+                    Tether.position();
                 }
             }
         });
