@@ -371,7 +371,7 @@ var NetworkAuditView = Backbone.View.extend({
                              //Advanced search dropdown with bootstrap dropdown menU
                             //Implement per column filtering options
                             //Add the filter icon
-                            var fClass='column-filter-'+idx;
+                            var fClass=ruleDTId + '-column-filter-'+idx;
                             var h = '<span class="glyphicon glyphicon-filter pull-right filter-icon '+fClass+'"></span>';
                             $(this).addClass('filtering');
                             //$(this).append(advFilterHtml);
@@ -395,9 +395,17 @@ var NetworkAuditView = Backbone.View.extend({
                                 openOn: 'click'
                               });
                                 
-                            $('body').on('input', '.per-column-search', function(){
-                                console.log( $(this).val());
+                            $('body').on('input', '#' + divId + ' .per-column-search', function(){
                                 ruleDataTable.api().column(idx).search($(this).val()).draw();
+                                var searchValue = $(this ).val();
+
+                                //Highlight wich columns have filters on by 
+                                //changing the filter color to blue
+                                if(searchValue != ""){
+                                    $('.' + fClass ).css("color","#2e6da4");
+                                }else{
+                                    $('.' + fClass ).css("color","#999996");
+                                }
                             });
                          } ); //end of foearch
                          
