@@ -47,8 +47,7 @@ var NetworkInventoryView = Backbone.View.extend({
     loadDashboard: function () {
         AppUI.I().Tabs().addTab({
             id: this.tabId,
-            title: '<img src="assets/images/discrepancy_black_100.png" \
-                width="16px" class="img-icon"/> Network Inventory</b>',
+            title: '<i class="fa fa-sticky-note-o"></i> Network Inventory</b>',
             content: AppUI.I().Loading('<h3>Loading network inventory module...</h3>')
         });
         AppUI.I().Tabs().show({id: this.tabId});

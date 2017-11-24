@@ -297,8 +297,13 @@ table.dataTable thead > tr > td.filtering{
 span.filter-icon.glyphicon.glyphicon-filter.pull-right {
     top: 3px;
     color: #999996;
-}
     
+}
+
+
+table.dataTable thead{
+     white-space: nowrap;
+}
 
 /**
 * Sorting
@@ -310,3 +315,18 @@ table.dataTable thead > tr > td.sorting_asc,
 table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
     padding-right: 22px !important;
 }
+
+
+/**
+Leaflet and Bootstrap issue. Bootstrap adds a margin on the tiles
+**/
+div.leaflet-tile-container > img {
+    margin: 0;
+}
+
+/**
+* Styles for the icons on the dahsboard 
+*/
+.dashboard-icon .fa { font-size: 100px; color: black;}
+.dashboard-icon .icon-label { text-align: center;}
+.dashboard-icon .icon-display { text-align: center;}

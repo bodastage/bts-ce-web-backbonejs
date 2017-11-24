@@ -2,8 +2,7 @@
 
 var dashboardTemplate =  require('html-loader!../templates/dashboard/dashboard.html');
 var leftPaneTemplate = require('html-loader!../templates/dashboard/left-pane.html');
-
-const AppUI = require('../libs/app-ui');
+const modulesIcon = require('../images/plugin_black_25.png');
 
 var DashboardView = Backbone.View.extend({
     el: '#bd_tab_content > #dashboard_tab',
@@ -20,13 +19,14 @@ var DashboardView = Backbone.View.extend({
     reload: function () {
         this.render();
     },
+    
     render: function () {
 
         this.$el.html(this.template());
 
         //Left side pane items
         //User left menu
-        AppUI.I().ModuleMenuBar().setTitle('<span class="glyphicon glyphicon-home"></span> Dashboard');
+        AppUI.I().ModuleMenuBar().setTitle('<img src="'+modulesIcon+'" width="32px" class="img-icon"/> Modules');
         AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
     }
 });

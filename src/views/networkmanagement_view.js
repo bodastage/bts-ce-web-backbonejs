@@ -1,15 +1,15 @@
 'use strict';
 
-var dashboardTemplate =  require('html-loader!../templates/processes/dashboard.html');
-var leftPaneTemplate = require('html-loader!../templates/processes/left-pane.html');
+var dashboardTemplate =  require('html-loader!../templates/networkmanagement/dashboard.html');
+var leftPaneTemplate = require('html-loader!../templates/networkmanagement/left-pane.html');
 
-var ProcessesView = Backbone.View.extend({
+var NetworkManagementView = Backbone.View.extend({
     el: 'body',
 
     //Template
     template: _.template(dashboardTemplate),
 
-    tabId: 'tab_processes',
+    tabId: 'tab_netmgt',
     
     /**
      * Reloading the module.
@@ -33,12 +33,11 @@ var ProcessesView = Backbone.View.extend({
      */
     loadDashboard: function () {
         var tabId = this.tabId;
-        var that = this;
         
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: '<i class="fa fa-cogs"></i> Processes',
-            content: AppUI.I().Loading('<h3>Loading processes module...</h3>')
+            title: '<i class="fa fa-sitemap"></i> Network Management',
+            content: AppUI.I().Loading('<h3>Loading network management module...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});
         
@@ -49,4 +48,4 @@ var ProcessesView = Backbone.View.extend({
     },
 });
 	
-module.exports = ProcessesView;
+module.exports = NetworkManagementView;

@@ -109,7 +109,7 @@
 	};
 
 	$.fn.tabdrop.defaults = {
-		text: '<i class="icon-align-justify"></i>'
+		text: '<i class="fa fa-list"></i>' //Requires fontawesome installed
 	};
 
 	$.fn.tabdrop.Constructor = TabDrop;

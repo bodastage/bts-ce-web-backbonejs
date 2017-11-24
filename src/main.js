@@ -11,7 +11,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  */
 require("font-awesome-webpack");
 
-
+/**
+ * Include leaflet for the GIS Module
+ */
+require("leaflet");
+require("leaflet_css");
+require("leaflet_marker");
+require("leaflet_marker_2x");
+require("leaflet_marker_shadow");
+require("leaflet-semicircle"); 
+require("leaflet.heat");
 /**
  * 
  * @type Module router|Module router
@@ -64,26 +73,39 @@ Backbone.history.start();
 AppUI.I().Tabs().closeTabEvent();
 AppUI.I().Tabs().initTabDrop();
 
-//Set url
+//Set API URL
 window.API_URL = 'http://localhost:8080';
 
 //Enable sorting of tabs
 $('#bd_nav_tab').sortable();
+ 
+ ///
+window.Stomp = require('stompjs');
+window.SockJS = require('sockjs-client');
 
-//window.Stomp = require('stompjs');
-//window.SockJS = require('sockjs-client');
-//var socket = new SockJS('http://localhost:8080/websocket');
-//var stompClient = Stomp.over(socket);
-// socket.onopen = function() {
-//     console.log('open');
-//     socket.send('test');
-// };
-//
-// socket.onmessage = function(e) {
-//     console.log('message', e.data);
-//     socket.close();
-// };
-//
-// socket.onclose = function() {
-//     console.log('close');
-// };
+var socket = new SockJS('http://localhost:8080/websocket');
+var stompClient = Stomp.over(socket);  
+
+ function connect() {
+    stompClient.connect({}, function(frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/export-status', function(messageOutput) {
+            console.log("Received:" + messageOutput);
+        });
+    });
+}
+
+function disconnect() {
+    if(stompClient != null) {
+        stompClient.disconnect();
+    }
+    setConnected(false);
+    console.log("Disconnected");
+}
+             
+function sendMessage() {
+    stompClient.send('/topic/export-status', {}, 
+      JSON.stringify({'from':"client1", 'text':"texdt2"}));
+}
+
+connect();

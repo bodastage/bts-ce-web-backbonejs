@@ -1,15 +1,15 @@
 'use strict';
 
-var dashboardTemplate =  require('html-loader!../templates/processes/dashboard.html');
-var leftPaneTemplate = require('html-loader!../templates/processes/left-pane.html');
+var dashboardTemplate =  require('html-loader!../templates/help/dashboard.html');
+var leftPaneTemplate = require('html-loader!../templates/help/left-pane.html');
 
-var ProcessesView = Backbone.View.extend({
+var HelpView = Backbone.View.extend({
     el: 'body',
 
     //Template
     template: _.template(dashboardTemplate),
 
-    tabId: 'tab_processes',
+    tabId: 'tab_help',
     
     /**
      * Reloading the module.
@@ -37,8 +37,8 @@ var ProcessesView = Backbone.View.extend({
         
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: '<i class="fa fa-cogs"></i> Processes',
-            content: AppUI.I().Loading('<h3>Loading processes module...</h3>')
+            title: '<i class="fa fa-question-circle-o"></i> Help',
+            content: AppUI.I().Loading('<h3>Loading help module...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});
         
@@ -49,4 +49,4 @@ var ProcessesView = Backbone.View.extend({
     },
 });
 	
-module.exports = ProcessesView;
+module.exports = HelpView;

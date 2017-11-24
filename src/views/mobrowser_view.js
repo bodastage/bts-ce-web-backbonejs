@@ -1,15 +1,22 @@
 'use strict';
+/**
+ * MO Browser Module
+ * 
+ * @version 1.0.0
+ * @author Bodastage Solutions<info@bodastage.com>
+ */
 
-var dashboardTemplate =  require('html-loader!../templates/processes/dashboard.html');
-var leftPaneTemplate = require('html-loader!../templates/processes/left-pane.html');
+var dashboardTemplate = require('html-loader!../templates/mobrowser/dashboard.html');
+var leftPaneTemplate = require('html-loader!../templates/mobrowser/left-pane.html');
 
-var ProcessesView = Backbone.View.extend({
+var MOBrowserView = Backbone.View.extend({
     el: 'body',
+
+    //tab Id for the mobule dashboard
+    tabId: 'tab_mobrowser',
 
     //Template
     template: _.template(dashboardTemplate),
-
-    tabId: 'tab_processes',
     
     /**
      * Reloading the module.
@@ -20,11 +27,13 @@ var ProcessesView = Backbone.View.extend({
     reload: function () {
         this.render();
     },
-    
     render: function () {
+
         this.loadDashboard();
+
     },
     
+
     /**
      * Load module dashboard
      *  
@@ -33,20 +42,20 @@ var ProcessesView = Backbone.View.extend({
      */
     loadDashboard: function () {
         var tabId = this.tabId;
-        var that = this;
         
         AppUI.I().Tabs().addTab({
-            id: tabId,
-            title: '<i class="fa fa-cogs"></i> Processes',
-            content: AppUI.I().Loading('<h3>Loading processes module...</h3>')
+            id: this.tabId,
+            title: '<i class="fa fa-globe"></i> MO Browser',
+            content: AppUI.I().Loading('<h3>Loading MO Browser module...</h3>')
         });
-        AppUI.I().Tabs().show({id: tabId});
+        AppUI.I().Tabs().show({id: this.tabId});
         
         AppUI.I().Tabs().setContent({
             id: tabId,
             content: this.template()
         });
-    },
+        
+    }
+
 });
-	
-module.exports = ProcessesView;
+module.exports = MOBrowserView;

@@ -24,6 +24,7 @@
     "datatables.net-bs": "^1.10.15",
     "datatables.net-colreorder": "^1.4.1",
     "popper.js": "^1.12.5",
+    "smartwizard": "^4.2.2",
     "sockjs": "^0.3.18",
     "stompjs": "^2.3.3",
     "tether": "^1.4.0",
