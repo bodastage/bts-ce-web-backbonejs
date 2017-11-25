@@ -63,6 +63,10 @@ require('datatables.net-bs/css/dataTables.bootstrap.css');
 //Add jquery datatables column re-order plug -in
 require( 'datatables.net-colreorder' );
 
+
+//Set API URL
+window.API_URL = 'http://localhost:8080';
+
 var appView = new AppView();
 
 appRouter();
@@ -73,8 +77,7 @@ Backbone.history.start();
 AppUI.I().Tabs().closeTabEvent();
 AppUI.I().Tabs().initTabDrop();
 
-//Set API URL
-window.API_URL = 'http://localhost:8080';
+
 
 //Enable sorting of tabs
 $('#bd_nav_tab').sortable();
@@ -83,7 +86,7 @@ $('#bd_nav_tab').sortable();
 window.Stomp = require('stompjs');
 window.SockJS = require('sockjs-client');
 
-var socket = new SockJS('http://localhost:8080/websocket');
+var socket = new SockJS( window.API_URL + '/websocket');
 var stompClient = Stomp.over(socket);  
 
  function connect() {
