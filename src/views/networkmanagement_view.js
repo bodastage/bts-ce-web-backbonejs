@@ -23,6 +23,7 @@ var NetworkManagementView = Backbone.View.extend({
     
     render: function () {
         this.loadDashboard();
+        this.loadLeftPanel();
     },
     
     /**
@@ -46,6 +47,38 @@ var NetworkManagementView = Backbone.View.extend({
             content: this.template()
         });
     },
+    
+    /**
+     * Load newtork tree 
+     * 
+     * @returns void
+     */
+    loadLeftPanel: function(){
+        var that = this;
+        AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-sitemap"></i> Network Elements');
+        AppUI.I().getLeftModuleArea().html(leftPaneTemplate);
+        
+        
+        //Initialize live network tree
+        var liveNetworkTree = $('#networktree_live').aciTree({
+            ajax: {
+                url: API_URL + "/api/network/tree/",
+                data: { 
+                        source: "live" //live network
+                }
+            },
+            ajaxHook: function(item,settings){
+                if(item !== null){
+                    var properties = this.itemData(item);
+                    settings.data['nodeType'] = properties['_nodeType'];
+                    if(!isNaN(parseInt(this.getId(item)))){
+                            settings.data['parentPk'] = this.getId(item);
+                    }
+                } 
+                settings.url += (item ? this.getId(item) : '');
+            }
+        }); //eof:live_tree
+    }
 });
 	
 module.exports = NetworkManagementView;

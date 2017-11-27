@@ -1,5 +1,5 @@
 var AuditRuleModel = Backbone.Model.extend({
-    urlRoot: 'http://localhost:8080/api/networkaudit/rule/',
+    urlRoot: API_URL + '/api/networkaudit/rule/',
     defaults: {},
     parse: function(response, options){
         var link = response._links.self.href;
