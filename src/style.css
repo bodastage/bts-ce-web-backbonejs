@@ -367,3 +367,10 @@ legend
 .mo-datatable tfoot {
     display: none;
 }
+
+/**
+* Live network icon
+*/
+.bd-live-network-icon{
+    color: red;
+}

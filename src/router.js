@@ -19,15 +19,16 @@ var modules = {};
 
 var initialize = function () {
     var appRouter = new AppRouter;
+    
+    var DashboardView = require('./views/dashboard_view');
+    modules.dashboard = new DashboardView();
+    
+    var HelpView = require('./views/help_view');
+    modules.help = new HelpView();
 
     //Load dashboard
     appRouter.on('route:loadDashboard', function () {
-        if (typeof modules.dashboard !== 'undefined') {
-            modules.dashboard.reload();
-        } else {
-            modules.dashboard = new DashboardView();
-            modules.dashboard.render();
-        }
+        modules.dashboard.render();
     });
 
     //Load Settings module
@@ -44,13 +45,7 @@ var initialize = function () {
 
     //Load help module
     appRouter.on('route:loadHelp', function () {
-        if (typeof modules.help !== 'undefined') {
-            modules.help.reload();
-        } else {
-            var HelpView = require('./views/help_view');
-            modules.help = new HelpView();
-            modules.help.render();
-        }
+        modules.help.render();
     });
 
     //Load network audit module
@@ -124,8 +119,6 @@ var initialize = function () {
     });
 
     //Show Dashboard by default
-    var DashboardView = require('./views/dashboard_view');
-    modules.dashboard = new DashboardView();
     modules.dashboard.render();
 };
 

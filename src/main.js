@@ -86,6 +86,7 @@ $('#bd_nav_tab').sortable();
 window.Stomp = require('stompjs');
 window.SockJS = require('sockjs-client');
 
+/**
 var socket = new SockJS( window.API_URL + '/websocket');
 var stompClient = Stomp.over(socket);  
 
@@ -112,3 +113,4 @@ function sendMessage() {
 }
 
 connect();
+**/

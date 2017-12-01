@@ -146,7 +146,7 @@ var MOBrowserView = Backbone.View.extend({
                     items: menu
                 };
             }
-        });
+        });//end of contextMenu
     },
     
     /**
@@ -209,7 +209,7 @@ var MOBrowserView = Backbone.View.extend({
                 //Initiate datatable to display rules data
                var moDataTable = $('#' + moDTId).DataTable({
                     "scrollX": true,
-                    //"scrollY": true,
+                    "scrollY": true,
                     "pagingType": 'full_numbers', 
                     "processing": true,
                     "serverSide": true,
