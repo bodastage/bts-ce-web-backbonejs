@@ -103,7 +103,7 @@ var NetworkManagementView = Backbone.View.extend({
                         name: 'View all parameters',
                         icon: "Paste",
                         callback: function () {
-                           
+                           window.location.href="#/netwosk/mscs";
                         }//eof:callback
                     };
                 }

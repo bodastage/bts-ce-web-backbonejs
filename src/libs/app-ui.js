@@ -22,6 +22,10 @@ require('imports-loader?this=>window!../vendors/aciTree/js/jquery.aciTree.min.js
 require('../vendors/jqueryContextMenu/jquery.contextMenu.js');
 
 
+//Leaflet-rule
+require('../vendors/leaflet-ruler/src/leaflet-ruler.js');
+require('../vendors/leaflet-ruler/src/leaflet-ruler.css');
+
 var AppUI = (function (jQ, window) {
     var ui_instance;
 

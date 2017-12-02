@@ -95,13 +95,16 @@ var GISView = Backbone.View.extend({
         
         //Load map
         this.map = L.map('network_map');
-        //this.nbrLayer = new L.layerGroup([]).addTo(this.map);
+        //this.nbrLayer = new L.Control.Layers().addTo(this.map);
         
         //Clear loading indicator on load
         this.map.on('load',function(){
             $('.bd-notice').html('');
         });
         
+        //Add ruler 
+        L.control.ruler().addTo(this.map);
+
         var latitude = -21.726113;
         var longitude= -48.1025004;
         
