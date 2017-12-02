@@ -23,6 +23,10 @@ require('../vendors/jqueryContextMenu/jquery.contextMenu.js');
 
 
 //Leaflet-rule
+require('../vendors/leaflet.fullscreen/Control.FullScreen.js');
+require('../vendors/leaflet.fullscreen/Control.FullScreen.css');
+
+//Leaflet-fullscreen
 require('../vendors/leaflet-ruler/src/leaflet-ruler.js');
 require('../vendors/leaflet-ruler/src/leaflet-ruler.css');
 

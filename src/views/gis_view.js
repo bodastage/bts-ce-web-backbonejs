@@ -94,7 +94,12 @@ var GISView = Backbone.View.extend({
         $('#network_map').height($(window).height());
         
         //Load map
-        this.map = L.map('network_map');
+        this.map = L.map('network_map', {
+            fullscreenControl: true,
+            fullscreenControlOptions: {
+                position: 'topleft'
+            }
+        });
         //this.nbrLayer = new L.Control.Layers().addTo(this.map);
         
         //Clear loading indicator on load
@@ -102,9 +107,22 @@ var GISView = Backbone.View.extend({
             $('.bd-notice').html('');
         });
         
-        //Add ruler 
-        L.control.ruler().addTo(this.map);
-
+        //Add ruler to measure distance
+        L.control.ruler({'position':'topleft'}).addTo(this.map);
+        
+        /**
+        //Add carrier color map 
+        var carrierColorMapControl = L.control({
+            position: 'topleft'
+        });
+        carrierColorMapControl.onAdd = function(map){
+            var div = L.DomUtil.create('div', 'bd_carrier_color_map');
+            div.innerHTML += 'Carrier Scale here';
+            return div;
+        };
+        carrierColorMapControl.addTo(this.map);
+        **/
+        
         var latitude = -21.726113;
         var longitude= -48.1025004;
         
