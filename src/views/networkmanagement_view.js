@@ -2,6 +2,7 @@
 
 var dashboardTemplate =  require('html-loader!../templates/networkmanagement/dashboard.html');
 var leftPaneTemplate = require('html-loader!../templates/networkmanagement/left-pane.html');
+var relationsTemplate = require('html-loader!../templates/networkmanagement/all-relations.html');
 
 var NetworkManagementView = Backbone.View.extend({
     el: 'body',
@@ -11,6 +12,9 @@ var NetworkManagementView = Backbone.View.extend({
 
     tabId: 'tab_netmgt',
     
+    events: {
+        "click .show-nbr-list" : "loadNeighbors"
+    },
     /**
      * Reloading the module.
      * 
@@ -46,6 +50,9 @@ var NetworkManagementView = Backbone.View.extend({
             id: tabId,
             content: this.template()
         });
+        
+        //Load network summary plots
+        this.plotNetworkSummary();
     },
     
     /**
@@ -152,6 +159,102 @@ var NetworkManagementView = Backbone.View.extend({
                 };
             }
         });//end of contextMenu
+    },
+    
+    /**
+     * Plot count of cells, sites, etc per vendor and technology
+     * 
+     * @since 1.0.0
+     * @returns void
+     */
+    plotNetworkSummary: function(){
+        var trace1 = {
+          x: ['Cells', 'Sites', 'Nodes'], 
+          y: [20, 14, 23], 
+          name: 'Ericsson', 
+          type: 'bar'
+        };
+
+        var trace2 = {
+          x: ['Cells', 'Sites', 'Nodes'], 
+          y: [12, 18, 29], 
+          name: 'Huawei', 
+          type: 'bar',
+            marker: {
+                color: 'rgb(255,0,0)'
+            }
+        };
+
+        var data = [trace1, trace2];
+        var layout = {barmode: 'group'};
+
+        Plotly.newPlot('network_summary_plot', data, layout);
+    },
+    
+    /**
+     * Load neighbours
+     * 
+     * @returns void
+     */
+    loadNeighbors: function(){
+        var tabId = this.tabId + "_all_relations";
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> All relations',
+            content: AppUI.I().Loading('<h3>Loading relations...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: relationsTemplate
+        });
+
+        //Initialize datatable
+        $('#dt_netmgt_all_relations').DataTable({
+            "scrollX": true,
+            "scrollY": true,
+            "pagingType": 'full_numbers',
+            "processing": true,
+            "serverSide": true,
+            colReorder: true,
+            "ajax": {
+                "url": API_URL + '/api/network/relations/dt',
+                "type": "POST",
+                'contentType': 'application/json',
+                'data': function (d) {
+                    return JSON.stringify(d);
+                }
+            },
+            "columns": [
+                {name:"pk", data: "pk" },
+                {name:"svrnode", data: "svrnode" },
+                {name:"svrsite", data: "svrsite" },
+                {name:"svrcell", data: "svrcell" },
+                {name:"svrtechnology", data: "svrtechnology" },
+                {name:"svrvendor", data: "svrvendor" },
+                {name:"nbrnode", data: "nbrnode" },
+                {name:"nbrsite", data: "nbrsite" },
+                {name:"nbrcell", data: "nbrcell" },
+                {name:"nbrtechnology", data: "nbrtechnology" },
+                {name:"nbrvendor", data: "nbrvendor" },
+            ],
+            columnDefs: [
+                 { targets: 0, visible: false }
+            ],
+            "language": {
+                "zeroRecords": "No matching data found",
+                "emptyTable": "MO has no data."
+            },
+            "dom":
+                    "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            "initComplete": function () {
+
+            }
+        });//end
     }
 });
 	

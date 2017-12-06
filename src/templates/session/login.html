@@ -1,0 +1,77 @@
+<style>
+
+    .login-mask{ 
+        position:fixed; 
+        top:0; 
+        left:0;  
+        z-index:5; 
+        width:100%; 
+        height:100%; 
+        /**background-color:rgba(0, 0, 0, 0.5);**/
+
+        background-color: #FFF;
+        z-index: 5;
+        padding-top:10%;
+        
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #333;
+    }
+
+    .form-signin {
+        width:340px; 
+        margin:0 auto; 
+        position:relative; 
+        z-index:10; 
+        background: #ffffff; 
+        border:5px solid #cccccc; 
+        border-radius:0px; 
+        padding:10px;
+
+    }
+    .form-signin input {
+        margin-bottom: 5px;
+    }
+
+    .login-logo{
+        text-align: center;
+    }
+    
+    .login-footer {
+        text-align: center;
+    }
+</style>
+<div class="login-mask">
+    
+    <div class="login-logo">
+        <img src="../../images/antenna_blue_64.png" data-src="../../images/plugin_black_25.png" width="30" /> 
+        <h2>Boda Telecom Suite - CE</h2>
+    </div>
+    
+    <form class="form-signin">
+        <div class=""><h4><i class="fa fa-lock"></i> Login</h4></div>
+            
+        <div class="form-signin-notices"></div>
+        <h2 class="form-signin-heading"></h2>
+        <label for="session_email" class="sr-only">Email address</label>
+        <input type="email" id="session_email" name="session_email" class="form-control" placeholder="Email address" required autofocus>
+        <label for="session_password" class="sr-only">Password</label>
+        <input type="password" id="session_password" name="session_password" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <a href="/#/session/forgotpassword">Forgot password?</a>
+        <a href="/#/session/getaccess">Request access?</a>
+    </form>
+    
+    <!--
+    <div class="login-footer">
+        &copy; 2017. Bodastage Solutions.
+    </div>
+    -->
+    
+</div> <!-- /container -->

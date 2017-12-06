@@ -9,6 +9,7 @@ var AppRouter = Backbone.Router.extend({
         'processes': 'loadProcesses',
         'netmgt': 'loadNetworkManagement',
         'networkinventory': 'loadNetworkInventory',
+        'baseline': 'loadBaseline',
         'settings': 'loadSettings',
         'gis': 'loadGIS',
         "*actions": "defaultRoute"
@@ -111,6 +112,17 @@ var initialize = function () {
             var NetworkManagementView = require('./views/networkmanagement_view');
             modules.netmgt = new NetworkManagementView();
             modules.netmgt.render();
+        }
+    });
+    
+    //Load baseline module
+    appRouter.on('route:loadBaseline', function () {
+        if (typeof modules.baseline !== 'undefined') {
+            modules.baseline.render();
+        } else {
+            var BaselineView = require('./views/baseline_view');
+            modules.baseline = new BaselineView();
+            modules.baseline.render();
         }
     });
     

@@ -4,7 +4,7 @@
 require('style-loader!../vendors/jqlayout/layout-default.css');
 const containerTemplate = require('html-loader!../templates/container.html');
 const AppUI = require('../libs/app-ui');
-
+var SessionView  = require('./session_view');
 
 // Top-level UI.
 var AppView = Backbone.View.extend({
@@ -17,12 +17,15 @@ var AppView = Backbone.View.extend({
 
     //Intialize. 
     initialize: function () {
-        
+
         //render app
         this.render();
     },
 
     render: function () {
+
+        var sessionView = new SessionView();
+        sessionView.render();
 
         this.$el.html(this.template({username: "Bodastage"}));
 
