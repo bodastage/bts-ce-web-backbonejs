@@ -8,8 +8,8 @@
 var dashboardTemplate = require('html-loader!../templates/mobrowser/dashboard.html');
 var moTemplate = require('html-loader!../templates/mobrowser/mo.html');
 var leftPaneTemplate = require('html-loader!../templates/mobrowser/left-pane.html');
-const moduleIcon = require('../images/registry_editor_black_25.png');
-const moduleIcon100 = require('../images/registry_editor_black_100.png');
+var moduleIcon = require('../images/registry_editor_black_25.png');
+var moduleIcon100 = require('../images/registry_editor_black_100.png');
 var VendorsCollection = require('../collections/vendors_collection');
 var TechCollection = require('../collections/technologies_collection');
 

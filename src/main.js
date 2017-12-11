@@ -44,7 +44,9 @@ require('tether-drop/dist/css/drop-theme-arrows.css');
 //Popover library
 //window.Popper  = require('popper.js').default;
 
-const appRouter = require('./router');
+//const appRouter = require('./router');
+var appRouter = require('./router');
+
 
 //Include the APP UI libraries
 window.AppUI = require('./libs/app-ui');
@@ -65,7 +67,8 @@ require( 'datatables.net-colreorder' );
 
 
 //Set API URL
-window.API_URL = 'http://localhost:8080';
+//window.API_URL = 'http://localhost:8080';
+window.API_URL = 'http://192.168.43.252:8080';
 
 var appView = new AppView();
 

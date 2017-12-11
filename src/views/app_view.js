@@ -2,8 +2,8 @@
 
 //The layout template
 require('style-loader!../vendors/jqlayout/layout-default.css');
-const containerTemplate = require('html-loader!../templates/container.html');
-const AppUI = require('../libs/app-ui');
+var  containerTemplate = require('html-loader!../templates/container.html');
+var  AppUI = require('../libs/app-ui');
 var SessionView  = require('./session_view');
 
 // Top-level UI.

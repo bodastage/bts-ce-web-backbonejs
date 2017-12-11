@@ -8,11 +8,11 @@
 
 var dashboardTmpl = require('html-loader!../templates/networkaudit/dashboard.html');
 var leftPanelTmpl = require('html-loader!../templates/networkaudit/left-pane.html');
-const rulesTmpl = require('html-loader!../templates/networkaudit/rule.html');
-const rulesGraphTmpl = require('raw-loader!../templates/networkaudit/rule-count-graph.html');
+var rulesTmpl = require('html-loader!../templates/networkaudit/rule.html');
+var rulesGraphTmpl = require('raw-loader!../templates/networkaudit/rule-count-graph.html');
 var AuditRuleFieldCollection = require('../collections/audit_rule_field_collection');
 var AuditRuleModel = require('../models/audit_rule_model');
-const moduleIcon = require('../images/discrepancy_black_100.png');
+var moduleIcon = require('../images/discrepancy_black_100.png');
 
 var NetworkAuditView = Backbone.View.extend({
     el: 'body',

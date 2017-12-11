@@ -2,7 +2,7 @@
 
 var dashboardTemplate =  require('html-loader!../templates/dashboard/dashboard.html');
 var leftPaneTemplate = require('html-loader!../templates/dashboard/left-pane.html');
-const modulesIcon = require('../images/plugin_black_25.png');
+var modulesIcon = require('../images/plugin_black_25.png');
 
 var DashboardView = Backbone.View.extend({
     el: '#bd_tab_content > #dashboard_tab',
