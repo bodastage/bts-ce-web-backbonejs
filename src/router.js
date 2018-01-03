@@ -10,6 +10,7 @@ var AppRouter = Backbone.Router.extend({
         'netmgt': 'loadNetworkManagement',
         'networkinventory': 'loadNetworkInventory',
         'baseline': 'loadBaseline',
+        'profile': 'loadProfile',
         'settings': 'loadSettings',
         'gis': 'loadGIS',
         "*actions": "defaultRoute"
@@ -24,9 +25,14 @@ var initialize = function () {
     var DashboardView = require('./views/dashboard_view');
     modules.dashboard = new DashboardView();
     
+    //Help module
     var HelpView = require('./views/help_view');
     modules.help = new HelpView();
 
+    //Profile module
+    var ProfileView = require('./views/profile_view');
+    modules.profile = new ProfileView();
+    
     //Load dashboard
     appRouter.on('route:loadDashboard', function () {
         modules.dashboard.render();
@@ -49,6 +55,11 @@ var initialize = function () {
         modules.help.render();
     });
 
+    //Load profile module
+    appRouter.on('route:loadProfile', function () {
+        modules.profile.render();
+    });
+    
     //Load network audit module
     appRouter.on('route:loadNetworkAudit', function () {
         if (typeof modules.networkaudit !== 'undefined') {

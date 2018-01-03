@@ -1,5 +1,5 @@
 var TechnologyModel = Backbone.Model.extend({
-    urlRoot: window.API_URL + '/api/technologies',
+    urlRoot: window.API_URL + '/api/technologies/',
     defaults: {
         name: '',
         notes: ''

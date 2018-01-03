@@ -374,3 +374,9 @@ legend
 .bd-live-network-icon{
     color: red;
 }
+
+/*Login*/
+.form-reset-password,
+.form-register{
+    display: none;
+}

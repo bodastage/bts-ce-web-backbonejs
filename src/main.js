@@ -55,7 +55,7 @@ var AppView = require('./views/app_view');
 
 //Include the spring friendly js for using databases
 //they convert
-import './libs/jquery.spring-friendly.js';
+//import './libs/jquery.spring-friendly.js';
 
 //Include data tables and bootstramp styles
 $.fn.DataTable = require('datatables.net');
@@ -67,8 +67,8 @@ require( 'datatables.net-colreorder' );
 
 
 //Set API URL
-//window.API_URL = 'http://localhost:8080';
-window.API_URL = 'http://192.168.43.252:8080';
+window.API_URL = 'http://localhost:8181';
+//window.API_URL = 'http://192.168.43.252:8080';
 
 var appView = new AppView();
 

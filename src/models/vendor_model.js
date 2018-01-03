@@ -1,5 +1,5 @@
 var VendorModel = Backbone.Model.extend({
-    urlRoot: window.API_URL + '/api/vendors',
+    urlRoot: window.API_URL + '/api/vendors/',
     defaults: {
         name: '',
         notes: ''

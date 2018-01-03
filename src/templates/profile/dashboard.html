@@ -1,0 +1,82 @@
+<div class="bd-notice"></div>
+
+<h1><span class="glyphicon glyphicon-user"></span> Profile</h1>
+
+<div class="row">
+    <div class="col-6 col-md-6 col-xs-12">
+        <form name="profile_form" id="profile_form" class="form-horizontal" >
+            <div class="form-group">
+                <label for="email" class="col-sm-3 control-label">Email address</label>
+                <div  class="col-sm-9">
+                    <input type="email" class="form-control" id="p_email" placeholder="Email" name="email" disabled="disabled">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="firstname" class="col-sm-3 control-label">First name</label>
+                <div  class="col-sm-9">
+                    <input type="text" class="form-control" id="p_firstname" placeholder="First name" name="firstname">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="lastname" class="col-sm-3 control-label">Last name</label>
+                <div  class="col-sm-9">
+                    <input type="text" class="form-control" id="p_lastname" placeholder="Last name" name="lastname">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="othernames" class="col-sm-3 control-label">Other names</label>
+                <div  class="col-sm-9">
+                    <input type="text" class="form-control" id="p_othernames" placeholder="Other names" name="othernames">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="jobtitle" class="col-sm-3 control-label">Job title</label>
+                <div  class="col-sm-9">
+                    <input type="text" class="form-control" id="p_jobtitle" placeholder="Job title" name="jobtitle">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="phonenumber" class="col-sm-3 control-label">Phone number</label>
+                <div  class="col-sm-9">
+                    <input type="text" class="form-control" id="p_phonenumber" placeholder="+010000000000" name="phonenumber">
+                    <p class="help-block">Start the phone number with the country code</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="col-sm-3 control-label">Password</label>
+                <div  class="col-sm-9">
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="photo" class="col-sm-3 control-label">Photo</label>
+                <div  class="col-sm-9">
+                    <input type="file" id="photo">
+                    <p class="help-block">Add a profile photo. Maximum dimensions should be 100px X 100px</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="token" class="col-sm-3 control-label">API Token</label>
+                <div  class="col-sm-9">
+                    <input type="email" class="form-control" placeholder="123456789" disabled="disabled" value="" name="token"/>
+                </div>
+            </div>
+
+            
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9"> 
+                  <button type="submit" class="btn btn-primary control-label">Update</button>
+                </div>
+              </div>
+            
+        </form>
+    </div>
+</div>
+

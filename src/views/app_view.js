@@ -27,7 +27,7 @@ var AppView = Backbone.View.extend({
         var sessionView = new SessionView();
         sessionView.render();
 
-        this.$el.html(this.template({username: "Bodastage"}));
+        this.$el.html(this.template({username: "Username"}));
 
         $('body').layout({applyDemoStyles: true,
             north: {

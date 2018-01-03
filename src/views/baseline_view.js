@@ -29,6 +29,8 @@ var BaselineView = Backbone.View.extend({
      * Load module dashboard
      *  
      * @version 1.0.0
+     * @since 1.0.0
+     * 
      * @return void
      */
     loadDashboard: function () {
@@ -38,15 +40,55 @@ var BaselineView = Backbone.View.extend({
         AppUI.I().Tabs().addTab({
             id: tabId,
             title: '<i class="fa fa-stop-circle-o"></i> Network Baseline',
-            content: AppUI.I().Loading('<h3>Loading baseline module...</h3>')
+            content: this.template()
         });
         AppUI.I().Tabs().show({id: tabId});
         
-        AppUI.I().Tabs().setContent({
-            id: tabId,
-            content: this.template()
-        });
+        that.loadBaseliveValues();
     },
+    
+    loadBaseliveValues: function(){
+        var tabId = tabId;
+        var that = this;
+        
+        //Initialize datatable
+        $('#dt_baseline_values').DataTable({
+            "scrollX": true,
+            "scrollY": true,
+            "pagingType": 'full_numbers',
+            "processing": true,
+            "serverSide": true,
+            colReorder: true,
+            "ajax": {
+                "url": API_URL + '/api/networkbaseline/dt/',
+                "type": "GET",
+                'contentType': 'application/json',
+                'data': function (d) {
+                    //return JSON.stringify(d);
+                }
+            },
+            "columns": [
+                {name:"vendor", data: "vendor" },
+                {name:"technology", data: "technology" },
+                {name:"mo", data: "mo" },
+                {name:"parameter", data: "parameter" },
+                {name:"value", data: "value" },
+                {name:"date_added", data: "date_added" },
+                {name:"date_modified", data: "date_modified" }
+            ],
+            "language": {
+                "zeroRecords": "No matching data found",
+                "emptyTable": "No network base line data."
+            },
+            "dom":
+                    "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            "initComplete": function () {
+
+            }
+        });//end
+    }
 });
 	
 module.exports = BaselineView;

@@ -19,7 +19,9 @@
         color: #333;
     }
 
-    .form-signin {
+    .form-signin,
+    .form-reset-password,
+    .form-register{
         width:340px; 
         margin:0 auto; 
         position:relative; 
@@ -30,10 +32,14 @@
         padding:10px;
 
     }
-    .form-signin input {
+    .form-signin input,
+    .form-reset-password input,
+    .form-register input,
+    .input-group{
         margin-bottom: 5px;
     }
 
+    
     .login-logo{
         text-align: center;
     }
@@ -49,24 +55,67 @@
         <h2>Boda Telecom Suite - CE</h2>
     </div>
     
-    <form class="form-signin">
+    <form class="form-signin" action="#">
         <!--
         <div class=""><h4><i class="fa fa-lock"></i> Login</h4></div>
         -->    
         <div class="form-signin-notices"></div>
-        <h2 class="form-signin-heading"></h2>
+        
         <label for="session_email" class="sr-only">Email address</label>
-        <input type="email" id="session_email" name="session_email" class="form-control" placeholder="Email address" required autofocus>
+        <div class="input-group">
+            <span class="input-group-addon"><b>@</b></span>
+            <input type="email" id="session_email" name="session_email" class="form-control" placeholder="Email address" required autofocus>
+        </div>
+        
         <label for="session_password" class="sr-only">Password</label>
-        <input type="password" id="session_password" name="session_password" class="form-control" placeholder="Password" required>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input type="password" id="session_password" name="session_password" class="form-control" placeholder="Password" required>
+        </div>
+        
         <div class="checkbox">
             <label>
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit" data-placeholder="Sign in">Sign in</button>
-        <a href="/#/session/forgotpassword">Forgot password?</a>
-        <a href="/#/session/getaccess">Request access?</a>
+        <a href="#" class="bd-forgot-password-link">Forgot password?</a>
+         <a href="#" class="bd-register-link">Request access?</a>
+    </form>
+    
+    <form class="form-reset-password" action="#">
+        <!--
+        <div class=""><h4><i class="fa fa-lock"></i> Login</h4></div>
+        -->    
+        <div class="form-reset-password-notices"></div>
+        <label for="email" class="sr-only">Email address</label>
+        <div class="input-group">
+            <span class="input-group-addon">@</span>
+            <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" data-placeholder="Reset">Reset</button>
+        <a href="#" class="bd-sign-in-link">Sign in?</a> 
+        <a href="#" class="bd-register-link">Request access?</a>
+    </form>
+    
+    <form class="form-register" action="#">
+        <div class="form-register-notices"></div>
+        
+        <label for="email" class="sr-only">Email address</label>
+        <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+        
+        <label for="firstname" class="sr-only">First name</label>
+        <input type="text" name="firstname" class="form-control" placeholder="First name" required>
+        
+        <label for="lastname" class="sr-only">Last name</label>
+        <input type="text" name="lastname" class="form-control" placeholder="Last name" required>
+        
+        <label for="othernames" class="sr-only">Other names</label>
+        <input type="text" name="othernames" class="form-control" placeholder="Other names">
+        
+        <button class="btn btn-lg btn-primary btn-block" type="submit" data-placeholder="Request access">Request access</button>
+        <a href="#" class="bd-sign-in-link">Sign in?</a> 
+        <a href="#" class="bd-forgot-password-link">Forgot password?</a>
     </form>
     
     <!--
