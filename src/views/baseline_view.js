@@ -68,13 +68,13 @@ var BaselineView = Backbone.View.extend({
                 }
             },
             "columns": [
-                {name:"vendor", data: "vendor" },
-                {name:"technology", data: "technology" },
-                {name:"mo", data: "mo" },
-                {name:"parameter", data: "parameter" },
-                {name:"value", data: "value" },
-                {name:"date_added", data: "date_added" },
-                {name:"date_modified", data: "date_modified" }
+                {name:"vendor", data: "vendor", title: "Vendor" },
+                {name:"technology", data: "technology", title: "Technology" },
+                {name:"mo", data: "mo", title: "Managed Object" },
+                {name:"parameter", data: "parameter", title: "Parameter" },
+                {name:"value", data: "value", title: "Value" },
+                {name:"date_added", data: "date_added", title: "Addition Date" },
+                {name:"date_modified", data: "date_modified", title:  "Update Date" }
             ],
             "language": {
                 "zeroRecords": "No matching data found",

@@ -10,6 +10,8 @@ var moTemplate = require('html-loader!../templates/mobrowser/mo.html');
 var leftPaneTemplate = require('html-loader!../templates/mobrowser/left-pane.html');
 var moduleIcon = require('../images/registry_editor_black_25.png');
 var moduleIcon100 = require('../images/registry_editor_black_100.png');
+
+//@TODO: These seem to call the api before they are needed. It is slowing the page load times. Change it.
 var VendorsCollection = require('../collections/vendors_collection');
 var TechCollection = require('../collections/technologies_collection');
 
@@ -96,9 +98,9 @@ var MOBrowserView = Backbone.View.extend({
             ajax: {
                 url: API_URL + '/api/managedobjects/tree/0',
                 data:{
-                    techPk: function(){ return $(that.$el).find('#bd_mobrowser_select_tech').val(); },
-                    vendorPk: function(){ return $(that.$el).find('#bd_mobrowser_select_vendor').val();}, 
-                    searchTerm: function(){ return $(that.$el).find('#bd_mobrowser_tree_filter').val(); }
+                    tech_pk: function(){ return $(that.$el).find('#bd_mobrowser_select_tech').val(); },
+                    vendor_pk: function(){ return $(that.$el).find('#bd_mobrowser_select_vendor').val();}, 
+                    search_term: function(){ return $(that.$el).find('#bd_mobrowser_tree_filter').val(); }
                 }
             }
         });
@@ -171,7 +173,7 @@ var MOBrowserView = Backbone.View.extend({
         AppUI.I().Tabs().show({id: tabId});
 
         $.ajax({
-            url: API_URL + '/api/managedobjects/mobrowser/columns/' + moPk,
+            url: API_URL + '/api/managedobjects/fields/' + moPk + '/',
             type: "GET",
             data: {},
             dataType: 'json',
@@ -190,8 +192,8 @@ var MOBrowserView = Backbone.View.extend({
                 
                 //Construct the tr data and also populate moFields
                _(data).each(function(field){
-                   tr += '<th>'+field.name + '</th>';
-                   moFields.push({name:field.name, data: field.name });
+                   tr += '<th>'+field + '</th>';
+                   moFields.push({name:field, data: field });
                });
                tr = '<tr>' + tr + '</tr>';
                
@@ -215,11 +217,11 @@ var MOBrowserView = Backbone.View.extend({
                     "serverSide": true,
                      colReorder: true,
                     "ajax": {
-                        "url": API_URL + '/api/managedobjects/mobrowser/dt/'+moPk,
-                        "type": "POST",
+                        "url": API_URL + '/api/managedobjects/dt/'+moPk+'/',
+                        "type": "GET",
                         'contentType': 'application/json',
                         'data': function(d) {
-				return JSON.stringify(d);
+				//return JSON.stringify(d);
 			}
                     },
                     "columns": moFields,

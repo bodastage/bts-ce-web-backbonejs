@@ -23,6 +23,7 @@ var ProcessesView = Backbone.View.extend({
     
     render: function () {
         this.loadDashboard();
+        this.loadLeftPanel();
     },
     
     /**
@@ -47,6 +48,12 @@ var ProcessesView = Backbone.View.extend({
             content: this.template()
         });
     },
+    
+    loadLeftPanel: function(){
+        //User left menu
+        AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-cogs"></i> Processes');
+        AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
+    }
 });
 	
 module.exports = ProcessesView;

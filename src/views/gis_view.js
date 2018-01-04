@@ -26,12 +26,20 @@ var GISView = Backbone.View.extend({
     
     /**
      * Carrier color map
+     * 
+     * @Get color map from settings 
      */
     freqColorMap: {
         "4154": "#FF5733",
         "9837": "#FFC300",
         "9882": "#33FF57",
-        "9763": "#0000FF"
+        "9763": "#0000FF",
+        
+        
+        "10737": "#FF5733",
+        "10712": "#FFC300",
+        "10762": "#33FF57",
+        "3086": "#0000FF"
     },
                 
     /**
@@ -123,8 +131,13 @@ var GISView = Backbone.View.extend({
         carrierColorMapControl.addTo(this.map);
         **/
         
-        var latitude = -21.726113;
-        var longitude= -48.1025004;
+        //Pick this from the settings
+        
+        //var latitude = -21.726113;
+        //var longitude= -48.1025004;
+        
+        var latitude = -27.4185262957322;
+        var longitude = 25.40126917833;
         
         this.map.setView([latitude, longitude], 13);
 
@@ -158,28 +171,28 @@ var GISView = Backbone.View.extend({
         var tabId = that.tabId;
         
         $.ajax({
-            'url': API_URL + '/api/network/cells',
+            'url': API_URL + '/api/network/live/cells/3g',
             'data': { page: page, size: size },
             'dataFormat': 'json',
             success: function(data){
                 var last = data.last;
-                var totalPages = data.totalPages;
-                var totalElements = data.totalElements;
+                //var totalPages = data.total_pages;
+                //var totalElements = data.total;
                 var size = data.size;
-                var number = data.number;
-                var sort = data.sort;
-                var numberOfElements = data.numberOfElements;
-                var first = data.first;
+                //var number = data.total;
+                //var sort = data.sort;
+                //var numberOfElements = data.numberOfElements;
+                //var first = data.first;
                 
                 that.loadCells(data.content);
                 
                 if(last === false && recurse === true ){
-                    $('#'+tabId + ' .bd-notice').html( AppUI.I().Loading('Loading cells... [' + page*size + '/' + totalElements  + ' loaded]'));
+                    $('#'+tabId + ' .bd-notice').html( AppUI.I().Loading('Loading cells... [' + page*size + '/' + data.total  + ' loaded]'));
                     that.fetchCells(page+1, size, true);
                 }
                 
                 if(last === true ){
-                    $('#'+tabId + ' .bd-notice').html(AppUI.I().Alerts({close:true}).Success( totalElements + ' cells loaded'));   
+                    $('#'+tabId + ' .bd-notice').html(AppUI.I().Alerts({close:true}).Success( data.total + ' cells loaded'));   
                 }
 
             }
@@ -196,11 +209,13 @@ var GISView = Backbone.View.extend({
         var that = this;
         
         $.each(cellList,function(key, value){
-            var sectorCarrier = value.siteSectorCarrier.substr(value.siteSectorCarrier.length-4);
+            //var sectorCarrier = value.siteSectorCarrier.substr(value.siteSectorCarrier.length-4);
 
-            var color = that.freqColorMap[value.uarfcnUl];
+            var color = that.freqColorMap[value.uarfcn_dl];
+            
+            console.log("color:" + color)
             //var color = colors[sectorCarrier];
-            var sector = L.semiCircle([value.latitude, value.longitude], {radius: value.cellRange/50, color: color})
+            var sector = L.semiCircle([value.latitude, value.longitude], {radius: 1000, color: color})
             .setDirection(value.azimuth, 45)
             .addTo(that.map);
     
