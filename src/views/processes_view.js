@@ -2,12 +2,17 @@
 
 var dashboardTemplate =  require('html-loader!../templates/processes/dashboard.html');
 var leftPaneTemplate = require('html-loader!../templates/processes/left-pane.html');
+var airflowTemplate = require('html-loader!../templates/processes/airflow.html');
 
 var ProcessesView = Backbone.View.extend({
     el: 'body',
 
     //Template
     template: _.template(dashboardTemplate),
+
+    events: {
+        'click .bts-mediation-airflow': 'showAirflowUI', //@TODO: Why is this event not being fired 
+    },
 
     tabId: 'tab_processes',
     
@@ -49,10 +54,32 @@ var ProcessesView = Backbone.View.extend({
         });
     },
     
+    /**
+     * Load left pane
+     * @returns 
+     */
     loadLeftPanel: function(){
         //User left menu
         AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-cogs"></i> Processes');
         AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
+    },
+    
+    /**
+     * Launch Airflow UI
+     * 
+     * @returns 
+     */
+    showAirflowUI: function(){
+        
+        var tabId = this.tabId + "_airflow";
+        var that = this;
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-cogs"></i> Airflow',
+            content: airflowTemplate
+        });
+        AppUI.I().Tabs().show({id: tabId});
     }
 });
 	
