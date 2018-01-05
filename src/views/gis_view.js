@@ -184,6 +184,15 @@ var GISView = Backbone.View.extend({
                 //var numberOfElements = data.numberOfElements;
                 //var first = data.first;
                 
+                
+                //Check if tab is still open 
+                if($('#'+tabId).length === 0) return;
+                
+                if (data.total === 0){
+                    $('#'+tabId + ' .bd-notice').html(AppUI.I().Alerts({close:true}).Success( 'There are no cells to load'));   
+                    return;
+                }
+                
                 that.loadCells(data.content);
                 
                 if(last === false && recurse === true ){
