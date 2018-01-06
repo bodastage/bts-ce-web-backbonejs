@@ -221,10 +221,10 @@ var NetworkManagementView = Backbone.View.extend({
             colReorder: true,
             "ajax": {
                 "url": API_URL + '/api/network/relations/dt',
-                "type": "POST",
+                "type": "GET",
                 'contentType': 'application/json',
                 'data': function (d) {
-                    return JSON.stringify(d);
+                    //return JSON.stringify(d);
                 }
             },
             "columns": [

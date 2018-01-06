@@ -139,14 +139,28 @@ var GISView = Backbone.View.extend({
         var latitude = -27.4185262957322;
         var longitude = 25.40126917833;
         
-        this.map.setView([latitude, longitude], 13);
+        console.log( API_URL + '/api/network/live/cells/3g?size=1&page=0' );
+        //Set center from a ramdom cell 
+        $.ajax({
+            'url': API_URL + '/api/network/live/cells/3g',
+            'dataFormat': 'json',
+            'data': { page: 0, size: 1 },
+            success: function(data){
+                console.log(data);
+                latitude = data.content[0].latitude;
+                longitude = data.content[0].longitude;
+                        
+                that.map.setView([latitude, longitude], 13);
 
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(this.map);
-        
-        $('#'+tabId + ' .bd-notice').html( AppUI.I().Loading('Loading cells...') + '<br />');
-        that.fetchCells(1,100, true);
+                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(that.map);
+
+                $('#'+tabId + ' .bd-notice').html( AppUI.I().Loading('Loading cells...') + '<br />');
+                that.fetchCells(0,100, true);
+            }
+        });
+       
 
 
         //Add weather
@@ -220,9 +234,9 @@ var GISView = Backbone.View.extend({
         $.each(cellList,function(key, value){
             //var sectorCarrier = value.siteSectorCarrier.substr(value.siteSectorCarrier.length-4);
 
-            var color = that.freqColorMap[value.uarfcn_dl];
+            var color = that.freqColorMap[value.uarfcn_ul];
+            //var color = that.freqColorMap[value.uarfcn_dl];
             
-            console.log("color:" + color)
             //var color = colors[sectorCarrier];
             var sector = L.semiCircle([value.latitude, value.longitude], {radius: 1000, color: color})
             .setDirection(value.azimuth, 45)

@@ -78,7 +78,7 @@ var BaselineView = Backbone.View.extend({
             ],
             "language": {
                 "zeroRecords": "No matching data found",
-                "emptyTable": "No network base line data."
+                "emptyTable": "No network baseline data."
             },
             "dom":
                     "<'row'<'col-sm-9'l><'col-sm-3'f>>" +

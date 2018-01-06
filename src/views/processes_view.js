@@ -70,13 +70,14 @@ var ProcessesView = Backbone.View.extend({
      * @returns 
      */
     showAirflowUI: function(){
+        var airflowURL = 'http://192.168.99.100:8080';
         
         var tabId = this.tabId + "_airflow";
         var that = this;
         
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: '<i class="fa fa-cogs"></i> Airflow',
+            title: '<img src="'+airflowURL+'/static/pin_100.png" width="16px" class="img-icon"/> ' + ' Airflow',
             content: airflowTemplate
         });
         AppUI.I().Tabs().show({id: tabId});
