@@ -68,7 +68,7 @@ var NetworkManagementView = Backbone.View.extend({
         //Initialize live network tree
         var liveNetworkTree = $('#live_newtork_tree').aciTree({
             ajax: {
-                url: API_URL + "/api/network/tree/",
+                url: API_URL + "/api/network/tree/live/cached",
                 data: { 
                         source: "live" //live network
                 }
