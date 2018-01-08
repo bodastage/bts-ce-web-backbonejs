@@ -4,6 +4,7 @@ var dashboardTemplate =  require('html-loader!../templates/networkmanagement/das
 var leftPaneTemplate = require('html-loader!../templates/networkmanagement/left-pane.html');
 var relationsTemplate = require('html-loader!../templates/networkmanagement/all-relations.html');
 var networkNodesTemplate = require('html-loader!../templates/networkmanagement/all-nodes.html');
+var networkSitesTemplate = require('html-loader!../templates/networkmanagement/all-sites.html');
 
 var NetworkManagementView = Backbone.View.extend({
     el: 'body',
@@ -16,6 +17,7 @@ var NetworkManagementView = Backbone.View.extend({
     events: {
         "click .show-nbr-list" : "loadNeighbors",
         "click .show-node-list" : "loadNetworkNodes",
+        "click .show-site-list" : "loadNetworkSites",
     },
     /**
      * Reloading the module.
@@ -309,7 +311,66 @@ var NetworkManagementView = Backbone.View.extend({
             ],
             "language": {
                 "zeroRecords": "No matching data found",
-                "emptyTable": "There are not nodes."
+                "emptyTable": "There are no nodes."
+            },
+            "dom":
+                    "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            "initComplete": function () {
+
+            }
+        });//end
+    },
+    
+    /**
+     * Load all live network sites 
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    loadNetworkSites: function(){
+        var tabId = this.tabId + "_all_network_sites";
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> Network Sites',
+            content: AppUI.I().Loading('<h3>Loading network sites...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: networkSitesTemplate
+        });
+
+        //Initialize datatable
+        $('#dt_all_network_sites').DataTable({
+            "scrollX": true,
+            "scrollY": true,
+            "pagingType": 'full_numbers',
+            "processing": true,
+            "serverSide": true,
+            colReorder: true,
+            "ajax": {
+                "url": API_URL + '/api/network/sites/dt',
+                "type": "GET",
+                'contentType': 'application/json'
+            },
+            "columns": [
+                {name:"id", data: "id" , title:"ID"},
+                {name:"name", data: "name", title: "Name" },
+                {name:"node", data: "node", title: "Node" },
+                {name:"technology", data: "technology", title: "Technology" },
+                {name:"vendor", data: "vendor" , title: "Vendor"},
+                {name:"date_added", data: "date_added" , title: "Date added"}
+            ],
+            columnDefs: [
+                 { targets: 0, visible: false }
+            ],
+            "language": {
+                "zeroRecords": "No matching data found",
+                "emptyTable": "There are no sites."
             },
             "dom":
                     "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
