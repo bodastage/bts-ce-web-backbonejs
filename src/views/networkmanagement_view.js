@@ -5,6 +5,7 @@ var leftPaneTemplate = require('html-loader!../templates/networkmanagement/left-
 var relationsTemplate = require('html-loader!../templates/networkmanagement/all-relations.html');
 var networkNodesTemplate = require('html-loader!../templates/networkmanagement/all-nodes.html');
 var networkSitesTemplate = require('html-loader!../templates/networkmanagement/all-sites.html');
+var networkCellsTemplate = require('html-loader!../templates/networkmanagement/all-cell-params.html');
 
 var NetworkManagementView = Backbone.View.extend({
     el: 'body',
@@ -18,7 +19,8 @@ var NetworkManagementView = Backbone.View.extend({
         "click .show-nbr-list" : "loadNeighbors",
         "click .show-node-list" : "loadNetworkNodes",
         "click .show-site-list" : "loadNetworkSites",
-        "click .lauch-network-tree": "loadLeftPanel"
+        "click .launch-network-tree": "loadLeftPanel",
+        "click .show-3gcell-list": "load3GCellParameters",
     },
     /**
      * Reloading the module.
@@ -380,6 +382,89 @@ var NetworkManagementView = Backbone.View.extend({
 
             }
         });//end
+    },
+    
+    /**
+     * Load all live network 3g cells 
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    load3GCellParameters: function(){
+        var tabId = this.tabId + "_3g_cell_params";
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> Network 3G Cells',
+            content: AppUI.I().Loading('<h3>Loading 3G cell list...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: (_.template(networkCellsTemplate))({ "title": "Network 3G Cells"}) 
+        });
+
+        //Get the columns first
+        $.ajax({
+            url: API_URL + '/api/network/live/cells/fields',
+            type: "GET",
+            data: {"tech_pk":2}, //UMTS Cells
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                //Construct tr for table header and footer
+                var tr = '';
+                var fields = [];
+                
+                //Construct the tr data and also populate moFields
+               _(data).each(function(field){
+                   tr += '<th>'+field + '</th>';
+                   fields.push({name:field, data: field });
+               });
+               tr = '<tr>' + tr + '</tr>';
+               
+               //Build table
+               var tableHtml = '<table id="dt_ntwk_3g_cell_params" class="table table-striped table-bordered dataTable" width="100%">';
+               tableHtml += '<thead>' + tr + '</thead>';
+               tableHtml += '<tfoot>' + tr + '</tfoot>';
+               tableHtml += '</table>';
+               
+               //Add html to tab content area
+               $('#'+tabId + ' .div-ntwk_3g_cell_params').html(tableHtml);
+               
+                //Initiate datatable to display rules data
+               var cellsDT = $('#dt_ntwk_3g_cell_params').DataTable({
+                    "scrollX": true,
+                    "scrollY": true,
+                    "pagingType": 'full_numbers', 
+                    "processing": true,
+                    "serverSide": true,
+                     colReorder: true,
+                    "ajax": {
+                        "url": API_URL + '/api/network/live/cells/dt',
+                        "type": "GET",
+                        'contentType': 'application/json',
+                        'data': { "tech_pk": 2}
+                    },
+                    "columns": fields,
+                    "language": {
+                        "zeroRecords": "No matching data found",
+                        "emptyTable": "There is no cell data."
+                    },
+                    "dom": 
+                        "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
+                    "initComplete": function(){
+                        
+                    }
+                });//end
+                
+            }
+        });
+
+
+
     }
 });
 	
