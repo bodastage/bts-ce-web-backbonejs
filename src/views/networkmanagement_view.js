@@ -3,6 +3,7 @@
 var dashboardTemplate =  require('html-loader!../templates/networkmanagement/dashboard.html');
 var leftPaneTemplate = require('html-loader!../templates/networkmanagement/left-pane.html');
 var relationsTemplate = require('html-loader!../templates/networkmanagement/all-relations.html');
+var networkNodesTemplate = require('html-loader!../templates/networkmanagement/all-nodes.html');
 
 var NetworkManagementView = Backbone.View.extend({
     el: 'body',
@@ -13,7 +14,8 @@ var NetworkManagementView = Backbone.View.extend({
     tabId: 'tab_netmgt',
     
     events: {
-        "click .show-nbr-list" : "loadNeighbors"
+        "click .show-nbr-list" : "loadNeighbors",
+        "click .show-node-list" : "loadNetworkNodes",
     },
     /**
      * Reloading the module.
@@ -68,20 +70,20 @@ var NetworkManagementView = Backbone.View.extend({
         //Initialize live network tree
         var liveNetworkTree = $('#live_newtork_tree').aciTree({
             ajax: {
-                url: API_URL + "/api/network/tree/live/cached",
+                url: API_URL + "/api/network/tree/cached/",
                 data: { 
                         source: "live" //live network
                 }
             },
-            ajaxHook: function(item,settings){
-                if(item !== null){
-                    var properties = this.itemData(item);
-                    settings.data['nodeType'] = properties['_nodeType'];
-                    settings.data['elementId'] = properties['_elementId'];
-                    settings.data['parentPk']  = properties['_elementId'];
-                } 
-                settings.url += (item ? this.getId(item) : '');
-            }
+//            ajaxHook: function(item,settings){
+//                if(item !== null){
+//                    var properties = this.itemData(item);
+//                    settings.data['nodeType'] = properties['_nodeType'];
+//                    settings.data['elementId'] = properties['_elementId'];
+//                    settings.data['parentPk']  = properties['_elementId'];
+//                } 
+//                settings.url += (item ? this.getId(item) : '');
+//            }
         }); //eof:live_tree
         
         
@@ -245,7 +247,69 @@ var NetworkManagementView = Backbone.View.extend({
             ],
             "language": {
                 "zeroRecords": "No matching data found",
-                "emptyTable": "MO has no data."
+                "emptyTable": "There is no relation data."
+            },
+            "dom":
+                    "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            "initComplete": function () {
+
+            }
+        });//end
+    },
+    
+    /**
+     * Load all live network nodes 
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    loadNetworkNodes: function(){
+        var tabId = this.tabId + "_all_network_nodes";
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> Network Nodes',
+            content: AppUI.I().Loading('<h3>Loading network nodes...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: networkNodesTemplate
+        });
+
+        //Initialize datatable
+        $('#dt_all_network_nodes').DataTable({
+            "scrollX": true,
+            "scrollY": true,
+            "pagingType": 'full_numbers',
+            "processing": true,
+            "serverSide": true,
+            colReorder: true,
+            "ajax": {
+                "url": API_URL + '/api/network/nodes/dt',
+                "type": "GET",
+                'contentType': 'application/json',
+                'data': function (d) {
+                    //return JSON.stringify(d);
+                }
+            },
+            "columns": [
+                {name:"id", data: "id" , title:"ID"},
+                {name:"nodename", data: "nodename", title: "Name" },
+                {name:"type", data: "type", title: "Type" },
+                {name:"technology", data: "technology", title: "Technology" },
+                {name:"vendor", data: "vendor" , title: "Vendor"},
+                {name:"date_added", data: "date_added" , title: "Date added"}
+            ],
+            columnDefs: [
+                 { targets: 0, visible: false }
+            ],
+            "language": {
+                "zeroRecords": "No matching data found",
+                "emptyTable": "There are not nodes."
             },
             "dom":
                     "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
