@@ -24,6 +24,10 @@ var MOBrowserView = Backbone.View.extend({
     //Template
     template: _.template(dashboardTemplate),
     moTableTemplate: _.template(moTemplate),
+    
+    "events": {
+        "click .launch-mo-tree-browser": "loadLeftPanel"
+    },
     /**
      * Reloading the module.
      * 
@@ -34,9 +38,7 @@ var MOBrowserView = Backbone.View.extend({
         this.render();
     },
     render: function () {
-
         this.loadDashboard();
-        this.loadLeftPanel();
     },
     
 

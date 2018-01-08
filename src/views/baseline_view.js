@@ -73,7 +73,7 @@ var BaselineView = Backbone.View.extend({
                 {name:"mo", data: "mo", title: "Managed Object" },
                 {name:"parameter", data: "parameter", title: "Parameter" },
                 {name:"value", data: "value", title: "Value" },
-                {name:"date_added", data: "date_added", title: "Addition Date" },
+                {name:"date_added", data: "date_added", title: "First Computation" },
                 {name:"date_modified", data: "date_modified", title:  "Update Date" }
             ],
             "language": {

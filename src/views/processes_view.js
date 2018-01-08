@@ -11,7 +11,7 @@ var ProcessesView = Backbone.View.extend({
     template: _.template(dashboardTemplate),
 
     events: {
-        'click .bts-mediation-airflow': 'showAirflowUI', //@TODO: Why is this event not being fired 
+        'click .launch-airflow': 'showAirflowUI', //@TODO: Why is this event not being fired 
     },
 
     tabId: 'tab_processes',

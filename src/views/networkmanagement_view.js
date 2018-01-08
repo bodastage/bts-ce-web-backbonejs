@@ -18,6 +18,7 @@ var NetworkManagementView = Backbone.View.extend({
         "click .show-nbr-list" : "loadNeighbors",
         "click .show-node-list" : "loadNetworkNodes",
         "click .show-site-list" : "loadNetworkSites",
+        "click .lauch-network-tree": "loadLeftPanel"
     },
     /**
      * Reloading the module.
@@ -31,7 +32,6 @@ var NetworkManagementView = Backbone.View.extend({
     
     render: function () {
         this.loadDashboard();
-        this.loadLeftPanel();
     },
     
     /**
