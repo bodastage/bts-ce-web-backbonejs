@@ -86,9 +86,9 @@ var SessionView = Backbone.View.extend({
             'xhrFields': {
                     withCredentials: true
             },
-            'headers': {
-                'X-Auth-Username': $('html').find('form.form-signin input[name=session_email]').val(),
-                'X-Auth-Password': $('html').find('form.form-signin input[name=session_password]').val()
+            'data': {
+                'username': $('html').find('form.form-signin input[name=session_email]').val(),
+                'password': $('html').find('form.form-signin input[name=session_password]').val()
             },
             "success": function(data, textStatus, jqXHR ){
                 localStorage.setItem("id", data.id);
@@ -128,8 +128,8 @@ var SessionView = Backbone.View.extend({
         $.ajaxSetup({
             beforeSend: function (xhr)
             {
-               //xhr.setRequestHeader("Accept","application/vvv.website+json;version=1");
-               xhr.setRequestHeader("X-Auth-Token",localStorage.getItem("token"));        
+               var token = localStorage.getItem("token");
+               xhr.setRequestHeader("Authorization","Bearer " + token);        
             }
         });
     },
