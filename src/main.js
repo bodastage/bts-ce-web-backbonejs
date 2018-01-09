@@ -85,9 +85,24 @@ AppUI.I().Tabs().initTabDrop();
 //Enable sorting of tabs
 $('#bd_nav_tab').sortable();
  
+ 
+//Register global callback for unauthenticated api requests
+$(document).ajaxError(function( event, jqxhr, settings, thrownError ) {
+    $.confirm({
+        "icon": 'fa fa-warning',
+        "title": "Authentication required",
+        content: 'Log into application again',
+        buttons: {
+            "login": function(){
+                $('body .logout').trigger('click');
+            }
+        }
+    });
+});
+
  ///
-window.Stomp = require('stompjs');
-window.SockJS = require('sockjs-client');
+//window.Stomp = require('stompjs');
+//window.SockJS = require('sockjs-client');
 
 /**
 var socket = new SockJS( window.API_URL + '/websocket');

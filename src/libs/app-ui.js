@@ -1,3 +1,6 @@
+require("jquery-confirm");
+require('jquery-confirm/css/jquery-confirm.css');
+
 require('../vendors/aciTree/css/aciTree.css');
 require('../vendors/jqueryContextMenu/jquery.contextMenu.css');
 

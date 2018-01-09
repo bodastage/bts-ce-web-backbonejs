@@ -63,8 +63,7 @@ var BaselineView = Backbone.View.extend({
                 "url": API_URL + '/api/networkbaseline/dt/',
                 "type": "GET",
                 'contentType': 'application/json',
-                'data': function (d) {
-                    //return JSON.stringify(d);
+                "error": function(jqXHR, textStatus, errorThrown ){
                 }
             },
             "columns": [
