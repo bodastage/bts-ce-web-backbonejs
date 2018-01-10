@@ -65,10 +65,11 @@ require('datatables.net-bs/css/dataTables.bootstrap.css');
 //Add jquery datatables column re-order plug -in
 require( 'datatables.net-colreorder' );
 
-
 //Set API URL
-window.API_URL = 'http://localhost:8181';
+window.API_URL = $.getParameterByName('api_server') || 'http://localhost:8181';
 //window.API_URL = 'http://192.168.43.252:8080';
+
+console.log(window.API_URL);
 
 var appView = new AppView();
 
@@ -88,16 +89,26 @@ $('#bd_nav_tab').sortable();
  
 //Register global callback for unauthenticated api requests
 $(document).ajaxError(function( event, jqxhr, settings, thrownError ) {
-    $.confirm({
-        "icon": 'fa fa-warning',
-        "title": "Authentication required",
-        content: 'Log into application again',
-        buttons: {
-            "login": function(){
-                $('body .logout').trigger('click');
+    if(jqxhr === 401){
+        $.confirm({
+            "icon": 'fa fa-warning',
+            "title": "Authentication required",
+            content: 'Log into application again',
+            buttons: {
+                "login": function(){
+                    $('body .logout').trigger('click');
+                }
             }
-        }
-    });
+        });
+    }
+
+    if(jqxhr.readyState == 0){
+        $.alert({
+            "icon": "fa fa-warning",
+            "title": "Connection error",
+            "content": "Check your network connectivity"
+        });
+    }
 });
 
  ///
