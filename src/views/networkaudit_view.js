@@ -75,15 +75,15 @@ var NetworkAuditView = Backbone.View.extend({
         try {
             var aciTreeAPI = $('#bd_auditrules_tree').aciTree({
                 ajax: {
-                url: 'http://localhost:8080/api/networkaudit/acitree/categories/0',
+                url: API_URL + '/api/networkaudit/tree/categories/0',
                 data: {
-                    searchRules: function () {
+                    "search_rules": function () {
                         return $(that.$el).find('[name=bd_filter_audit_rules]').is(':checked');
                     },
-                    searchCategories: function () {
+                    "search_categories": function () {
                         return $(that.$el).find('[name=bd_filter_audit_cats]').is(':checked');
                     },
-                    searchTerm: function () {
+                    "search_term": function () {
                         return $(that.$el).find('#bd_audit_filter').val();
                     }
                 }//oef:data
