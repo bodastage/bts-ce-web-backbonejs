@@ -25,13 +25,16 @@ var NetworkAuditView = Backbone.View.extend({
      */
     ruleTableTemplate: _.template(rulesTmpl),
     
+    events: {
+        "click .launch-audit-rule-tree": "loadLeftPane"
+    },
+    
     render: function () {
         this.loadDashboard();
         AppUI.I().Tabs().setContent({
             id: this.tabId,
             content: dashboardTmpl
         });
-        this.loadLeftPane();
     },
 
     /**

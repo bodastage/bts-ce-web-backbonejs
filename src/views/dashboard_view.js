@@ -2,7 +2,6 @@
 
 var dashboardTemplate =  require('html-loader!../templates/dashboard/dashboard.html');
 var leftPaneTemplate = require('html-loader!../templates/dashboard/left-pane.html');
-var modulesIcon = require('../images/plugin_black_25.png');
 
 var DashboardView = Backbone.View.extend({
     el: '#bd_tab_content > #dashboard_tab',
@@ -25,7 +24,7 @@ var DashboardView = Backbone.View.extend({
         this.$el.html(this.template());
 
         //Left side pane items
-        AppUI.I().ModuleMenuBar().setTitle('<img src="'+modulesIcon+'" width="32px" class="img-icon"/> Modules');
+        AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-plug"></i> Modules');
         AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
     }
 });
