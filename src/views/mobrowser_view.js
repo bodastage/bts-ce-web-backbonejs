@@ -8,8 +8,6 @@
 var dashboardTemplate = require('html-loader!../templates/mobrowser/dashboard.html');
 var moTemplate = require('html-loader!../templates/mobrowser/mo.html');
 var leftPaneTemplate = require('html-loader!../templates/mobrowser/left-pane.html');
-var moduleIcon = require('../images/registry_editor_black_25.png');
-var moduleIcon100 = require('../images/registry_editor_black_100.png');
 
 //@TODO: These seem to call the api before they are needed. It is slowing the page load times. Change it.
 var VendorsCollection = require('../collections/vendors_collection');
@@ -53,7 +51,7 @@ var MOBrowserView = Backbone.View.extend({
         
         AppUI.I().Tabs().addTab({
             id: this.tabId,
-            title: '<img src="'+moduleIcon+'" width="16px" class="img-icon"/> MO Browser',
+            title: '<i class="fa fa-puzzle-piece"></i> MO Browser',
             content: AppUI.I().Loading('<h3>Loading MO Browser module...</h3>')
         });
         AppUI.I().Tabs().show({id: this.tabId});
@@ -75,7 +73,7 @@ var MOBrowserView = Backbone.View.extend({
     loadLeftPanel: function () {
         var that = this;
         
-        AppUI.I().ModuleMenuBar().setTitle('<img src="'+moduleIcon100+'" width="32px" class="img-icon"/> MO Browser');
+        AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-puzzle-piece"></i> MO Browser');
         AppUI.I().getLeftModuleArea().html(leftPaneTemplate);
         
         //Add vendors
@@ -170,7 +168,7 @@ var MOBrowserView = Backbone.View.extend({
         //Load MO tab
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: '<img src="' + moduleIcon + '" width="16px" class="img-icon"/> ' + moName,
+            title: '<i class="fa fa-puzzle-piece"></i> ' + moName,
             content: AppUI.I().Loading('<h3>Loading ' + moName + '...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});

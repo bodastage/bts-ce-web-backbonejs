@@ -12,7 +12,6 @@ var rulesTmpl = require('html-loader!../templates/networkaudit/rule.html');
 var rulesGraphTmpl = require('raw-loader!../templates/networkaudit/rule-count-graph.html');
 var AuditRuleFieldCollection = require('../collections/audit_rule_field_collection');
 var AuditRuleModel = require('../models/audit_rule_model');
-var moduleIcon = require('../images/discrepancy_black_100.png');
 
 var NetworkAuditView = Backbone.View.extend({
     el: 'body',
@@ -26,7 +25,8 @@ var NetworkAuditView = Backbone.View.extend({
     ruleTableTemplate: _.template(rulesTmpl),
     
     events: {
-        "click .launch-audit-rule-tree": "loadLeftPane"
+        "click .launch-audit-rule-tree": "loadLeftPane",
+        "click .refresh-netaudit-tree": "refreshNetAuditTree",
     },
     
     render: function () {
@@ -56,8 +56,7 @@ var NetworkAuditView = Backbone.View.extend({
     loadDashboard: function () {
         AppUI.I().Tabs().addTab({
             id: this.tabId,
-            title: '<img src="'+moduleIcon+'" \
-                width="16px" class="img-icon"/> Network Audit',
+            title: '<i class="fa fa-wrench"></i> Network Audit',
             content: AppUI.I().Loading('<h3>Loading network audit module...</h3>')
         });
         AppUI.I().Tabs().show({id: this.tabId});
@@ -70,13 +69,21 @@ var NetworkAuditView = Backbone.View.extend({
      */
     loadLeftPane: function () {
         var that = this;
-        AppUI.I().ModuleMenuBar().setTitle('<img src="'+moduleIcon+'" width="32px" class="img-icon"/> Network Audit	');
+        AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-wrench"></i> Network Audit	');
 
         AppUI.I().getLeftModuleArea().html(leftPanelTmpl);
+        
+        //Spin refresh icon while the tree loads
+        $('.refresh-netaudit-tree').addClass('fa-spin');
+        $('#bd_auditrules_tree').on('acitree', function(event, api, item, eventName, options) {
+            if(eventName === 'init' || eventName === 'wasloaded'){
+                $('.refresh-netaudit-tree').removeClass('fa-spin');
+            }
+        });
 
         //Load ACI Tree of rules and categories
         try {
-            var aciTreeAPI = $('#bd_auditrules_tree').aciTree({
+            this.aciTreeInstance = $('#bd_auditrules_tree').aciTree({
                 ajax: {
                 url: API_URL + '/api/networkaudit/tree/categories/0',
                 data: {
@@ -215,8 +222,7 @@ var NetworkAuditView = Backbone.View.extend({
         //Get rule details 
         var auditRuleModel = new AuditRuleModel({id: ruleId});
         auditRuleModel.fetch({success: function(model,response,options){
-            var tabTitle =  '<img src="'+moduleIcon+'" \
-                width="16px" class="img-icon"/> ' + 
+            var tabTitle =  '<i class="fa fa-wrench"></i> ' + 
                 model.get("name");
             AppUI.I().Tabs().setTitle({
                 id: tabId,
@@ -501,6 +507,16 @@ var NetworkAuditView = Backbone.View.extend({
           title:'Line and Scatter Plot'
         };
         Plotly.newPlot(ruleCountGraphDiv , data, layout);
+    },
+    
+    /**
+     * Refresh network audit tree
+     * 
+     * @version 1.0.0
+     */
+    refreshNetAuditTree: function(){
+        $('.refresh-netaudit-tree').addClass('fa-spin');
+        $('#bd_auditrules_tree').aciTree('api').ajaxLoad();
     }
 });
 

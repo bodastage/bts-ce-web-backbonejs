@@ -327,8 +327,8 @@ div.leaflet-tile-container > img {
 /**
 * Styles for the icons on the dahsboard 
 */
-.dashboard-icon .fa { font-size: 100px; color: black;}
-.dashboard-icon .icon-label { text-align: center;}
+.dashboard-icon .fa, .dashboard-icon .glyphicon { font-size: 100px; color: black;}
+.dashboard-icon .icon-label { text-align: center; font-weight:bold;}
 .dashboard-icon .icon-display { text-align: center;}
 
 
@@ -382,7 +382,7 @@ legend
 }
 
 
-/**/
+/**Style Airflow iframe in tab to fill container**/
 .hide-footer { display: none;}
 
 .airflow-container {
