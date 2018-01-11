@@ -210,6 +210,17 @@ table.pretty th {
     border: 1px solid #fff;
 }
 
+
+/*No line breaks in tables*/
+.table>tbody>tr>td, 
+.table>tbody>tr>th, 
+.table>tfoot>tr>td, 
+.table>tfoot>tr>th, 
+.table>thead>tr>td, 
+.table>thead>tr>th{
+    white-space: nowrap;
+}
+
 /**
 Created to ensure form select fields are style with bootstrap's .form-control styles
 but with no width value and display set to inline.

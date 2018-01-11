@@ -78,21 +78,24 @@ var MOBrowserView = Backbone.View.extend({
         
         //Add vendors
         var vendorsCollection = new VendorsCollection();
-        vendorsCollection.fetch({async:false});
-         var vendorField = $(that.$el).find('#bd_mobrowser_select_vendor');
-        _(vendorsCollection.models).each(function(vendor){
-                var _h = '<option value="'+vendor.get("id")+'">'+vendor.get("name")+'</option>';
-                $(vendorField).append(_h);
-        });
+        //vendorsCollection.fetch({async:false});
+        var vendorField = $(that.$el).find('#bd_mobrowser_select_vendor');
+        vendorsCollection.fetch({success: function(collection,response,options){
+            _(collection.models).each(function(vendor){
+                    var _h = '<option value="'+vendor.get("id")+'">'+vendor.get("name")+'</option>';
+                    $(vendorField).append(_h);
+            });
+        }});
         
         //Add technolgoies
         var techCollection = new TechCollection();
-        techCollection.fetch({async:false});
-         var techField = $(that.$el).find('#bd_mobrowser_select_tech');
-        _(techCollection.models).each(function(tech){
+        var techField = $(that.$el).find('#bd_mobrowser_select_tech');
+        techCollection.fetch({success: function(collection,response,options){
+            _(collection.models).each(function(tech){
                 var _h = '<option value="'+tech.get("id")+'">'+tech.get("name")+'</option>';
                 $(techField).append(_h);
-        });//eof:.each
+            });
+        }});
 
         var aciTreeAPI = $('#mo_tree').aciTree({
             ajax: {
@@ -194,14 +197,14 @@ var MOBrowserView = Backbone.View.extend({
                 //Construct the tr data and also populate moFields
                _(data).each(function(field){
                    tr += '<th>'+field + '</th>';
-                   moFields.push({name:field, data: field });
+                   moFields.push({name:field, data: field , title: field + '&nbsp;<span class="glyphicon glyphicon-filter pull-right filter-icon"></span>&nbsp;&nbsp;&nbsp;&nbsp;' });
                });
                tr = '<tr>' + tr + '</tr>';
                
                var moDTId = 'mo_dt_' + moPk;
                
                //Build table
-               var tableHtml = '<table id="'+moDTId+'" class="table table-striped table-bordered dataTable" width="100%">';
+               var tableHtml = '<table id="'+moDTId+'" class="table table-striped table-bordered dataTable" width="100%" nowrap >';
                tableHtml += '<thead>' + tr + '</thead>';
                tableHtml += '<tfoot>' + tr + '</tfoot>';
                tableHtml += '</table>';
@@ -211,8 +214,11 @@ var MOBrowserView = Backbone.View.extend({
                
                 //Initiate datatable to display rules data
                var moDataTable = $('#' + moDTId).DataTable({
+                    "renderer": "bootstrap",
                     "scrollX": true,
                     "scrollY": true,
+                    //"autoWidth": false,
+                    //"deferRender": true,
                     "pagingType": 'full_numbers', 
                     "processing": true,
                     "serverSide": true,
@@ -234,8 +240,28 @@ var MOBrowserView = Backbone.View.extend({
                         "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
                         "<'row'<'col-sm-12'tr>>" +
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
-                    "initComplete": function(){
+                    "initComplete": function(settings, json){
                         
+                        //Refresh button
+                        $('#'+moDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                        $('#'+moDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                            moDataTable.api().ajax.reload();
+                        });
+                        
+                        //Per column filtering
+
+ 
+                        
+                    },
+                    "headerCallback": function(thead, data, start, end, display){
+                        
+                        //Re-append the filter icon on every table redraw
+//                        $(thead).find('th').each( function (idx) {
+//                            var fClass=moDTId + '-column-filter-'+idx;
+//                            var h = '<span class="glyphicon glyphicon-filter pull-right filter-icon '+fClass+'"></span>';
+//                            $(this).addClass('filtering');
+//                            $(this).append(h);
+//                        });
                     }
                 });//end
             },
