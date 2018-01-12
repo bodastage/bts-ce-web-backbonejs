@@ -175,7 +175,7 @@ var MOBrowserView = Backbone.View.extend({
             content: AppUI.I().Loading('<h3>Loading ' + moName + '...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});
-        
+            
         $.ajax({
             url: API_URL + '/api/managedobjects/fields/' + moPk + '/',
             type: "GET",
@@ -201,16 +201,8 @@ var MOBrowserView = Backbone.View.extend({
                    
                    //Class to use for drop targets
                    var filterCls='drop-target-'+field+'-'+moDTId;
-                   moFields.push({name:field, data: field , title: '<span class="glyphicon glyphicon-filter  filter-icon '+filterCls+'"></span>'+field + '&nbsp;' });
+                   moFields.push({name:field, data: field , title: '<span onclick=" event.stopPropagation();" class="glyphicon glyphicon-filter  filter-icon '+filterCls+'"></span>'+field + '&nbsp;' });
                    
-                        //Prevent sorting when filter icon is clicked
-                     $('body').on('click', '.'+filterCls,function(e){
-                        e.stopPropagation();    
-                        e.preventDefault(); 
-                        e.stopImmediatePropagation()
-                        console.log(e);
-                     });
-
                });
                tr = '<tr>' + tr + '</tr>';
                

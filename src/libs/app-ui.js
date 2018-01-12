@@ -46,6 +46,20 @@ $.getParameterByName = function(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+/**
+ * Stop DOM event propagation. Needed for jquery datatables sorting
+ * Taken from : https://stackoverflow.com/questions/25828099/datatables-how-can-i-avoid-column-sorting-if-i-have-checkbox-and-popup-controls
+ * 
+ * @param {type} evt
+ */
+$.stopPropagation = function(evt){
+    if (evt.stopPropagation !== undefined) {
+        evt.stopPropagation();
+    } else {
+        evt.cancelBubble = true;
+    }
+}
+
 var AppUI = (function (jQ, window) {
     var ui_instance;
 
