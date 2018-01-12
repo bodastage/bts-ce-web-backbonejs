@@ -175,7 +175,7 @@ var MOBrowserView = Backbone.View.extend({
             content: AppUI.I().Loading('<h3>Loading ' + moName + '...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});
-
+        
         $.ajax({
             url: API_URL + '/api/managedobjects/fields/' + moPk + '/',
             type: "GET",
@@ -189,6 +189,7 @@ var MOBrowserView = Backbone.View.extend({
                     content:  that.moTableTemplate({moName: moName})
                 });
 
+                var moDTId = 'mo_dt_' + moPk;
                 
                 //Construct tr for table header and footer
                 var tr = '';
@@ -197,11 +198,23 @@ var MOBrowserView = Backbone.View.extend({
                 //Construct the tr data and also populate moFields
                _(data).each(function(field){
                    tr += '<th>'+field + '</th>';
-                   moFields.push({name:field, data: field , title: field + '&nbsp;<span class="glyphicon glyphicon-filter pull-right filter-icon"></span>&nbsp;&nbsp;&nbsp;&nbsp;' });
+                   
+                   //Class to use for drop targets
+                   var filterCls='drop-target-'+field+'-'+moDTId;
+                   moFields.push({name:field, data: field , title: '<span class="glyphicon glyphicon-filter  filter-icon '+filterCls+'"></span>'+field + '&nbsp;' });
+                   
+                        //Prevent sorting when filter icon is clicked
+                     $('body').on('click', '.'+filterCls,function(e){
+                        e.stopPropagation();    
+                        e.preventDefault(); 
+                        e.stopImmediatePropagation()
+                        console.log(e);
+                     });
+
                });
                tr = '<tr>' + tr + '</tr>';
                
-               var moDTId = 'mo_dt_' + moPk;
+
                
                //Build table
                var tableHtml = '<table id="'+moDTId+'" class="table table-striped table-bordered dataTable" width="100%" nowrap >';
@@ -241,15 +254,59 @@ var MOBrowserView = Backbone.View.extend({
                         "<'row'<'col-sm-12'tr>>" +
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
                     "initComplete": function(settings, json){
-                        
+
+
                         //Refresh button
                         $('#'+moDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
                         $('#'+moDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
                             moDataTable.api().ajax.reload();
                         });
-                        
-                        //Per column filtering
+                         
+                         _.forEach(moFields, function(field, idx){
+                             
+                             var filterCls='drop-target-'+field.name+'-'+moDTId;
+                             var filterId ='drop_target_'+field.name +'_'+moDTId;;
+                              
+                            var advancedFilterHtml = '\
+                            <div class="" class="advanced-filter" id="'+filterId+'">\
+                                <input type="text" placeholder="Search..." value="" \
+                                    class="form-control per-column-search" data-column-index='+idx+' \
+                                    data-column-name="'+field.name+'"/>\
+                                <div></div>\
+                            </div>\
+                            ';
+                             
+                            var dropInstance = new Drop({
+                                target: document.querySelector('.' + filterCls),
+                                content: advancedFilterHtml,
+                                classes: 'drop-theme-arrows',
+                                position: 'bottom center',
+                                openOn: 'click'
+                              });
+                              
 
+                         });
+                         
+                        $('body').on('input', 'input.per-column-search', function(){
+                            var colIdx = $(this).data('column-index');
+                            var colName= $(this).data('column-name');
+                            
+                            //@TODO: sanitize class name
+                            var filterCls='drop-target-'+colName+'-'+moDTId;
+                            //var filterId ='drop_target_'+colName +'_'+moDTId;;
+                            console.log("colIdx:"+colIdx);
+                            
+                            moDataTable.api().column(colIdx).search($(this).val()).draw();
+                            var searchValue = $(this ).val();
+
+                            //Highlight wich columns have filters on by 
+                            //changing the filter color to blue
+                            if(searchValue != ""){
+                                $('.' + filterCls ).css("color","#2e6da4");
+                            }else{
+                                $('.' + filterCls ).css("color","#999996");
+                            }
+                        });
  
                         
                     },

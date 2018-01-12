@@ -305,7 +305,7 @@ table.dataTable thead > tr > td.filtering{
 /**
 * Filter icon
 */
-span.filter-icon.glyphicon.glyphicon-filter.pull-right {
+span.filter-icon {
     top: 3px;
     color: #999996;
     
