@@ -1,2 +1,2 @@
-# boda-open-cm-webclient
-Web client for Boda Open CM - An open source vendor agnostic configuration management platform for the Radio Access, Transmission, and Core Network 
+# Boda Telecom Suite - CE Web Client
+Web client for Boda Telecom Suite Community Edition - An open source vendor agnostic telecommunication management platform for the Radio Access, Transmission, and Core Network
