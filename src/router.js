@@ -8,8 +8,9 @@ var AppRouter = Backbone.Router.extend({
         'mobrowser': 'loadMOBrowser',
         'processes': 'loadProcesses',
         'netmgt': 'loadNetworkManagement',
-        'networkinventory': 'loadNetworkInventory',
+        //'networkinventory': 'loadNetworkInventory',
         'baseline': 'loadBaseline',
+        'telecomlib': 'loadTelecomlib',
         'profile': 'loadProfile',
         'settings': 'loadSettings',
         'gis': 'loadGIS',
@@ -83,13 +84,24 @@ var initialize = function () {
     });
 
     //Load network invetory module
-    appRouter.on('route:loadNetworkInventory', function () {
-        if (typeof modules.networkinventory !== 'undefined') {
-            modules.networkinventory.render();
+//    appRouter.on('route:loadNetworkInventory', function () {
+//        if (typeof modules.networkinventory !== 'undefined') {
+//            modules.networkinventory.render();
+//        } else {
+//            var NetworkInventoryView = require('./views/networkinventory_view');
+//            modules.networkinventory = new NetworkInventoryView();
+//            modules.networkinventory.render();
+//        }
+//    });
+
+    //Load telecom library module
+    appRouter.on('route:loadTelecomlib', function () {
+        if (typeof modules.telecomlib !== 'undefined') {
+            modules.telecomlib.render();
         } else {
-            var NetworkInventoryView = require('./views/networkinventory_view');
-            modules.networkinventory = new NetworkInventoryView();
-            modules.networkinventory.render();
+            var NetworkInventoryView = require('./views/telecomlib_view');
+            modules.telecomlib = new NetworkInventoryView();
+            modules.telecomlib.render();
         }
     });
     

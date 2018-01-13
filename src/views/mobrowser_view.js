@@ -206,10 +206,8 @@ var MOBrowserView = Backbone.View.extend({
                });
                tr = '<tr>' + tr + '</tr>';
                
-
-               
                //Build table
-               var tableHtml = '<table id="'+moDTId+'" class="table table-striped table-bordered dataTable" width="100%" nowrap >';
+               var tableHtml = '<table id="'+moDTId+'" class="table table-striped table-bordered dataTable" width="100%">';
                tableHtml += '<thead>' + tr + '</thead>';
                tableHtml += '<tfoot>' + tr + '</tfoot>';
                tableHtml += '</table>';
