@@ -52,29 +52,9 @@ var GISView = Backbone.View.extend({
         this.render();
     },
     render: function () {
-
         this.loadDashboard();
-
-/**
-        //Left side pane items
-        AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-globe"></i> GIS');
-        AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
-        **/
-        //Render map
-        /**
-        var map = L.map('network_map').setView([51.505, -0.09], 13);
-
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        L.marker([51.5, -0.09]).addTo(map)
-            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-            .openPopup();
-            **/
     },
     
-
     /**
      * Load module dashboard
      *  
@@ -103,6 +83,7 @@ var GISView = Backbone.View.extend({
         
         //Load map
         this.map = L.map('network_map', {
+            selectArea: true,
             fullscreenControl: true,
             fullscreenControlOptions: {
                 position: 'topleft'
@@ -110,6 +91,13 @@ var GISView = Backbone.View.extend({
         });
         //this.nbrLayer = new L.Control.Layers().addTo(this.map);
         
+        //List for area selection
+        this.map.on('areaselected', (e) => {
+            that.handleAreaSelection(e);
+        });
+        
+        //this.map.selectArea.setCtrlKey(true); 
+
         //Clear loading indicator on load
         this.map.on('load',function(){
             $('.bd-notice').html('');
@@ -132,14 +120,9 @@ var GISView = Backbone.View.extend({
         **/
         
         //Pick this from the settings
-        
-        //var latitude = -21.726113;
-        //var longitude= -48.1025004;
-        
-        var latitude = -27.4185262957322;
-        var longitude = 25.40126917833;
-        
-        console.log( API_URL + '/api/network/live/cells/3g?size=1&page=0' );
+        var latitude = 0;
+        var longitude = 0;
+
         //Set center from a ramdom cell 
         $.ajax({
             'url': API_URL + '/api/network/live/cells/3g',
@@ -155,9 +138,9 @@ var GISView = Backbone.View.extend({
                 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(that.map);
+                
+                $('#'+tabId+ ' .bd-notice').html('');
 
-                $('#'+tabId + ' .bd-notice').html( AppUI.I().Loading('Loading cells...') + '<br />');
-                that.fetchCells(0,100, true);
             }
         });
        
@@ -261,6 +244,15 @@ var GISView = Backbone.View.extend({
 
             sector.bindPopup(h);
         });        
+    },
+    
+    loadAllCells: function(){
+        $('#'+tabId + ' .bd-notice').html( AppUI.I().Loading('Loading cells...') + '<br />');
+        that.fetchCells(0,100, true);
+    },
+    
+    handleAreaSelection: function(event){
+        console.log(event.bounds.toBBoxString()); // lon, lat, lon, lat 
     }
 
 });

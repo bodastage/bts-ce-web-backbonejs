@@ -274,29 +274,33 @@ var MOBrowserView = Backbone.View.extend({
                                 openOn: 'click'
                               });
                               
+                              
+                            //Add filtering logic  
+                            $('body').on('input','#' +filterId+ ' input.per-column-search', function(){
+                                var colIdx = $(this).data('column-index');
+                                var colName= $(this).data('column-name');
 
+                                //@TODO: sanitize class name
+                                var filterCls='drop-target-'+colName+'-'+moDTId;
+                                //var filterId ='drop_target_'+colName +'_'+moDTId;;
+
+
+                                moDataTable.api().column(colIdx).search($(this).val()).draw();
+                                var searchValue = $(this ).val();
+
+                                //Highlight wich columns have filters on by 
+                                //changing the filter color to blue
+                                if(searchValue != ""){
+                                    $('.' + filterCls ).css("color","#2e6da4");
+                                }else{
+                                    $('.' + filterCls ).css("color","#999996");
+                                }
+
+
+                            });
                          });
                          
-                        $('body').on('input', 'input.per-column-search', function(){
-                            var colIdx = $(this).data('column-index');
-                            var colName= $(this).data('column-name');
-                            
-                            //@TODO: sanitize class name
-                            var filterCls='drop-target-'+colName+'-'+moDTId;
-                            //var filterId ='drop_target_'+colName +'_'+moDTId;;
-                            console.log("colIdx:"+colIdx);
-                            
-                            moDataTable.api().column(colIdx).search($(this).val()).draw();
-                            var searchValue = $(this ).val();
 
-                            //Highlight wich columns have filters on by 
-                            //changing the filter color to blue
-                            if(searchValue != ""){
-                                $('.' + filterCls ).css("color","#2e6da4");
-                            }else{
-                                $('.' + filterCls ).css("color","#999996");
-                            }
-                        });
  
                         
                     },

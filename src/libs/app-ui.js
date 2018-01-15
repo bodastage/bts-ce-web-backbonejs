@@ -33,6 +33,9 @@ require('../vendors/leaflet.fullscreen/Control.FullScreen.css');
 require('../vendors/leaflet-ruler/src/leaflet-ruler.js');
 require('../vendors/leaflet-ruler/src/leaflet-ruler.css');
 
+//Leaflet area select 
+require('leaflet-area-select');
+
 //Get URL parameters
 // @TODO: Move to separate jqeury plugin 
 

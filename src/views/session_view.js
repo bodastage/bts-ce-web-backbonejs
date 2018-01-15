@@ -109,7 +109,6 @@ var SessionView = Backbone.View.extend({
                 var response = JSON.parse(jqXHR.responseText);
                     $('.form-signin-notices').html(AppUI.I().Alerts({close:true}).Error(response.message))
                 }catch(e){
-                    console.log(e);
                     $('.form-signin-notices').html(AppUI.I().Alerts({close:true}).Error("Error occured!"))
                 }
                 
