@@ -20,7 +20,9 @@ var NetworkManagementView = Backbone.View.extend({
         "click .show-node-list" : "loadNetworkNodes",
         "click .show-site-list" : "loadNetworkSites",
         "click .launch-network-tree": "loadLeftPanel",
+        "click .show-2gcell-list": "load2GCellParameters",
         "click .show-3gcell-list": "load3GCellParameters",
+        "click .show-4gcell-list": "load4GCellParameters",
     },
     /**
      * Reloading the module.
@@ -430,7 +432,7 @@ var NetworkManagementView = Backbone.View.extend({
                tableHtml += '</table>';
                
                //Add html to tab content area
-               $('#'+tabId + ' .div-ntwk_3g_cell_params').html(tableHtml);
+               $('#'+tabId + ' .div-ntwk_cells_params').html(tableHtml);
                
                 //Initiate datatable to display rules data
                var cellsDT = $('#dt_ntwk_3g_cell_params').DataTable({
@@ -465,6 +467,167 @@ var NetworkManagementView = Backbone.View.extend({
 
 
 
+    },
+    
+    /**
+     * Load all live network 2g cells parameters
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    load2GCellParameters: function(){
+        var tabId = this.tabId + "_2g_cell_params";
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> Network 2G Cells',
+            content: AppUI.I().Loading('<h3>Loading 2G cell list...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: (_.template(networkCellsTemplate))({ "title": "Network 2G Cells"}) 
+        });
+
+        //Get the columns first
+        $.ajax({
+            url: API_URL + '/api/network/live/cells/fields',
+            type: "GET",
+            data: {"tech_pk":1}, //GSM Cells
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                //Construct tr for table header and footer
+                var tr = '';
+                var fields = [];
+                
+                //Construct the tr data and also populate moFields
+               _(data).each(function(field){
+                   tr += '<th>'+field + '</th>';
+                   fields.push({name:field, data: field });
+               });
+               tr = '<tr>' + tr + '</tr>';
+               
+               //Build table
+               var tableHtml = '<table id="dt_ntwk_2g_cell_params" class="table table-striped table-bordered dataTable" width="100%">';
+               tableHtml += '<thead>' + tr + '</thead>';
+               tableHtml += '<tfoot>' + tr + '</tfoot>';
+               tableHtml += '</table>';
+               
+               //Add html to tab content area
+               $('#'+tabId + ' .div-ntwk_cells_params').html(tableHtml);
+               
+                //Initiate datatable to display rules data
+               var cellsDT = $('#dt_ntwk_2g_cell_params').DataTable({
+                    "scrollX": true,
+                    "scrollY": true,
+                    "pagingType": 'full_numbers', 
+                    "processing": true,
+                    "serverSide": true,
+                     colReorder: true,
+                    "ajax": {
+                        "url": API_URL + '/api/network/live/cells/dt',
+                        "type": "GET",
+                        'contentType': 'application/json',
+                        'data': { "tech_pk": 1}
+                    },
+                    "columns": fields,
+                    "language": {
+                        "zeroRecords": "No matching data found",
+                        "emptyTable": "There is no cell data."
+                    },
+                    "dom": 
+                        "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
+                    "initComplete": function(){
+                        
+                    }
+                });//end
+                
+            }
+        });
+    },
+    
+   
+    /**
+     * Load all live network 4g cells parameters
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    load4GCellParameters: function(){
+        var tabId = this.tabId + "_4g_cell_params";
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> Network 4G Cells',
+            content: AppUI.I().Loading('<h3>Loading 4G cell list...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: (_.template(networkCellsTemplate))({ "title": "Network 4G Cells"}) 
+        });
+
+        //Get the columns first
+        $.ajax({
+            url: API_URL + '/api/network/live/cells/fields',
+            type: "GET",
+            data: {"tech_pk":3}, //LTE Cells
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                //Construct tr for table header and footer
+                var tr = '';
+                var fields = [];
+                
+                //Construct the tr data and also populate moFields
+               _(data).each(function(field){
+                   tr += '<th>'+field + '</th>';
+                   fields.push({name:field, data: field });
+               });
+               tr = '<tr>' + tr + '</tr>';
+               
+               //Build table
+               var tableHtml = '<table id="dt_ntwk_4g_cell_params" class="table table-striped table-bordered dataTable" width="100%">';
+               tableHtml += '<thead>' + tr + '</thead>';
+               tableHtml += '<tfoot>' + tr + '</tfoot>';
+               tableHtml += '</table>';
+               
+               //Add html to tab content area
+               $('#'+tabId + ' .div-ntwk_cells_params').html(tableHtml);
+               
+                //Initiate datatable to display rules data
+               var cellsDT = $('#dt_ntwk_4g_cell_params').DataTable({
+                    "scrollX": true,
+                    "scrollY": true,
+                    "pagingType": 'full_numbers', 
+                    "processing": true,
+                    "serverSide": true,
+                     colReorder: true,
+                    "ajax": {
+                        "url": API_URL + '/api/network/live/cells/dt',
+                        "type": "GET",
+                        'contentType': 'application/json',
+                        'data': { "tech_pk": 3}
+                    },
+                    "columns": fields,
+                    "language": {
+                        "zeroRecords": "No matching data found",
+                        "emptyTable": "There is no cell data."
+                    },
+                    "dom": 
+                        "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
+                    "initComplete": function(){
+                        
+                    }
+                });//end
+                
+            }
+        });
     }
 });
 	
