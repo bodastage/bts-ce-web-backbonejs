@@ -23,6 +23,9 @@ var NetworkManagementView = Backbone.View.extend({
         "click .show-2gcell-list": "load2GCellParameters",
         "click .show-3gcell-list": "load3GCellParameters",
         "click .show-4gcell-list": "load4GCellParameters",
+        "click .load-2g-externals": "load2GExternalCells",
+        "click .load-3g-externals": "load3GExternalCells",
+        "click .load-msc-definitions": "loadMSCDefinitions",
     },
     /**
      * Reloading the module.
@@ -407,6 +410,8 @@ var NetworkManagementView = Backbone.View.extend({
             content: (_.template(networkCellsTemplate))({ "title": "Network 3G Cells"}) 
         });
 
+        var tableDTId = 'dt_ntwk_3g_cell_params';
+        
         //Get the columns first
         $.ajax({
             url: API_URL + '/api/network/live/cells/fields',
@@ -458,7 +463,17 @@ var NetworkManagementView = Backbone.View.extend({
                         "<'row'<'col-sm-12'tr>>" +
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
                     "initComplete": function(){
+                        //Refresh button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                            cellsDT.api().ajax.reload();
+                        });
                         
+                        //Donwload button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-download').click(function(){
+                            //moDataTable.api().ajax.reload();
+                        });
                     }
                 });//end
                 
@@ -490,6 +505,8 @@ var NetworkManagementView = Backbone.View.extend({
             content: (_.template(networkCellsTemplate))({ "title": "Network 2G Cells"}) 
         });
 
+        var tableDTId = 'dt_ntwk_2g_cell_params';
+        
         //Get the columns first
         $.ajax({
             url: API_URL + '/api/network/live/cells/fields',
@@ -541,7 +558,17 @@ var NetworkManagementView = Backbone.View.extend({
                         "<'row'<'col-sm-12'tr>>" +
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
                     "initComplete": function(){
+                        //Refresh button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                            cellsDT.api().ajax.reload();
+                        });
                         
+                        //Donwload button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-download').click(function(){
+                            //moDataTable.api().ajax.reload();
+                        });
                     }
                 });//end
                 
@@ -589,6 +616,7 @@ var NetworkManagementView = Backbone.View.extend({
                });
                tr = '<tr>' + tr + '</tr>';
                
+               var tableDTId = 'dt_ntwk_4g_cell_params';
                //Build table
                var tableHtml = '<table id="dt_ntwk_4g_cell_params" class="table table-striped table-bordered dataTable" width="100%">';
                tableHtml += '<thead>' + tr + '</thead>';
@@ -622,7 +650,201 @@ var NetworkManagementView = Backbone.View.extend({
                         "<'row'<'col-sm-12'tr>>" +
                         "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
                     "initComplete": function(){
+                        //Refresh button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                            cellsDT.api().ajax.reload();
+                        });
                         
+                        //Donwload button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-download').click(function(){
+                            //moDataTable.api().ajax.reload();
+                        });
+                    }
+                });//end
+                
+            }
+        });
+    },
+    
+    /**
+     * Load network GSM external cells and their parameters 
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    load2GExternalCells: function(){
+        var tabId = this.tabId + "_2g_external_params";
+        var tableDTId = 'dt_ntwk_2g_external_params'; 
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> Network 2G External Cells',
+            content: AppUI.I().Loading('<h3>Loading 2G External Cells...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: (_.template(networkCellsTemplate))({ "title": "Network 2G Externals"}) 
+        });
+
+        //Get the columns first
+        $.ajax({
+            url: API_URL + '/api/network/live/extcells/fields',
+            type: "GET",
+            data: {"tech_pk":1}, //Tech=GSM
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                //Construct tr for table header and footer
+                var tr = '';
+                var fields = [];
+                
+                //Construct the tr data and also populate moFields
+               _(data).each(function(field){
+                   tr += '<th>'+field + '</th>';
+                   fields.push({name:field, data: field });
+               });
+               tr = '<tr>' + tr + '</tr>';
+               
+               
+               //Build table
+               var tableHtml = '<table id="'+tableDTId+'" class="table table-striped table-bordered dataTable" width="100%">';
+               tableHtml += '<thead>' + tr + '</thead>';
+               tableHtml += '<tfoot>' + tr + '</tfoot>';
+               tableHtml += '</table>';
+               
+               //Add html to tab content area
+               $('#'+tabId + ' .div-ntwk_cells_params').html(tableHtml);
+               
+                //Initiate datatable to display rules data
+               var cellsDT = $('#'+tableDTId).DataTable({
+                    "scrollX": true,
+                    "scrollY": true,
+                    "pagingType": 'full_numbers', 
+                    "processing": true,
+                    "serverSide": true,
+                     colReorder: true,
+                    "ajax": {
+                        "url": API_URL + '/api/network/live/extcells/dt',
+                        "type": "GET",
+                        'contentType': 'application/json',
+                        'data': { "tech_pk": 1}
+                    },
+                    "columns": fields,
+                    "language": {
+                        "zeroRecords": "No matching data found",
+                        "emptyTable": "There is cell data."
+                    },
+                    "dom": 
+                        "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
+                    "initComplete": function(){
+                        //Refresh button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                            cellsDT.api().ajax.reload();
+                        });
+                        
+                        //Donwload button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-download').click(function(){
+                            //moDataTable.api().ajax.reload();
+                        });
+                    }
+                });//end
+                
+            }
+        });
+    },
+    
+    /**
+     * Load network UMTS external cells and their parameters 
+     * 
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    load3GExternalCells: function(){
+        var tabId = this.tabId + "_3g_external_params";
+        var tableDTId = 'dt_ntwk_3g_external_params'; 
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-sitemap"></i> Network 3G External Cells',
+            content: AppUI.I().Loading('<h3>Loading 3G External Cells...</h3>')
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        AppUI.I().Tabs().setContent({
+            id: tabId,
+            content: (_.template(networkCellsTemplate))({ "title": "Network 3G Externals"}) 
+        });
+
+        //Get the columns first
+        $.ajax({
+            url: API_URL + '/api/network/live/extcells/fields',
+            type: "GET",
+            data: {"tech_pk":2}, //Tech=UMTS
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                //Construct tr for table header and footer
+                var tr = '';
+                var fields = [];
+                
+                //Construct the tr data and also populate moFields
+               _(data).each(function(field){
+                   tr += '<th>'+field + '</th>';
+                   fields.push({name:field, data: field });
+               });
+               tr = '<tr>' + tr + '</tr>';
+               
+               
+               //Build table
+               var tableHtml = '<table id="'+tableDTId+'" class="table table-striped table-bordered dataTable" width="100%">';
+               tableHtml += '<thead>' + tr + '</thead>';
+               tableHtml += '<tfoot>' + tr + '</tfoot>';
+               tableHtml += '</table>';
+               
+               //Add html to tab content area
+               $('#'+tabId + ' .div-ntwk_cells_params').html(tableHtml);
+               
+                //Initiate datatable to display rules data
+               var cellsDT = $('#'+tableDTId).DataTable({
+                    "scrollX": true,
+                    "scrollY": true,
+                    "pagingType": 'full_numbers', 
+                    "processing": true,
+                    "serverSide": true,
+                     colReorder: true,
+                    "ajax": {
+                        "url": API_URL + '/api/network/live/extcells/dt',
+                        "type": "GET",
+                        'contentType': 'application/json',
+                        'data': { "tech_pk": 2}
+                    },
+                    "columns": fields,
+                    "language": {
+                        "zeroRecords": "No matching data found",
+                        "emptyTable": "There is cell data."
+                    },
+                    "dom": 
+                        "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
+                    "initComplete": function(){
+                        //Refresh button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                            cellsDT.api().ajax.reload();
+                        });
+                        
+                        //Donwload button
+                        $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                        $('#'+tableDTId + '_wrapper .dataTables_length .fa-download').click(function(){
+                            //moDataTable.api().ajax.reload();
+                        });
                     }
                 });//end
                 

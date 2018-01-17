@@ -251,6 +251,13 @@ var MOBrowserView = Backbone.View.extend({
                         $('#'+moDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
                             moDataTable.api().ajax.reload();
                         });
+                        
+                        //Donwload button
+                        $('#'+moDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                        $('#'+moDTId + '_wrapper .dataTables_length .fa-download').click(function(){
+                            //moDataTable.api().ajax.reload();
+                        });
+                         
                          
                          _.forEach(moFields, function(field, idx){
                              
