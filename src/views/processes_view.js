@@ -61,7 +61,6 @@ var ProcessesView = Backbone.View.extend({
     loadLeftPanel: function(){
         //User left menu
         AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-cogs"></i> Processes');
-        AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
     },
     
     /**
