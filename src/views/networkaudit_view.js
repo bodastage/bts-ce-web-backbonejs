@@ -152,7 +152,8 @@ var NetworkAuditView = Backbone.View.extend({
                     var itemId = api.getId(item);
                     var properties = api.itemData(item);
                     var itemLabel = api.getLabel(item);
-
+                    var parentLabel = api.getLabel(api.parent(item));
+                    
                     //Category context menu items
                     if (properties['nodeType'] == 'category'){
 
@@ -178,7 +179,7 @@ var NetworkAuditView = Backbone.View.extend({
                         menu['load_rule']  = {
                             name: 'Load',
                             callback: function() {
-                                that.loadAuditRule(itemId, itemLabel);
+                                that.loadAuditRule(itemId, itemLabel, parentLabel);
                             }//eof:callback
                         };
 
@@ -213,7 +214,7 @@ var NetworkAuditView = Backbone.View.extend({
 
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: '<i class="fa fa-wrench"></i> ' + ruleName,
+            title: '<i class="fa fa-wrench"></i> ' + parentName + "/" + ruleName,
             content: this.ruleTableTemplate({ruleName: 'Loading ...'})
             //content: AppUI.I().Loading('<h3>Loading network audit rule...</h3>')
         });
@@ -232,7 +233,7 @@ var NetworkAuditView = Backbone.View.extend({
                 //Load the html template for the mo datatable
                 AppUI.I().Tabs().setContent({
                     id: tabId, 
-                    content: (_.template(rulesTmpl))({ruleName: ruleName})
+                    content: (_.template(rulesTmpl))({ruleName: parentName + '/' + ruleName})
                 });
 
                 var ruleDTId = 'rule_dt_' + ruleId;
