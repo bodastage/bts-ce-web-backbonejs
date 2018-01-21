@@ -63,7 +63,7 @@ var NetworkManagementView = Backbone.View.extend({
         });
         
         //Load network summary plots
-        this.plotNetworkSummary();
+        //this.plotNetworkSummary();
     },
     
     /**

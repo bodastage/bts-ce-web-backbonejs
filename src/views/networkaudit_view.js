@@ -151,6 +151,7 @@ var NetworkAuditView = Backbone.View.extend({
                     var item = api.itemFrom(element);
                     var itemId = api.getId(item);
                     var properties = api.itemData(item);
+                    var itemLabel = api.getLabel(item);
 
                     //Category context menu items
                     if (properties['nodeType'] == 'category'){
@@ -158,18 +159,18 @@ var NetworkAuditView = Backbone.View.extend({
                         //Reload rules under category
                         menu['reload_category'] = {
                             name: 'Refresh',
-                                callback: function() {
-                                    api.unload(item, {
-                                        success: function(){ 
-                                                    api.ajaxLoad(item, {
-                                                        success: function(){
-                                                            api.open(item);
-                                                        }, 
-                                                        fail: function(){}, unanimated: false}); 
-                                        }
-                                    });
-                                }//eof:callback
-                            };
+                            callback: function () {
+                                api.unload(item, {
+                                    success: function () {
+                                        api.ajaxLoad(item, {
+                                            success: function () {
+                                                api.open(item);
+                                            },
+                                            fail: function () {}, unanimated: false});
+                                    }
+                                });
+                            }//eof:callback
+                        };
                     }//eof: nodeType == category
 
                     //Audit rule context menu items
@@ -177,7 +178,7 @@ var NetworkAuditView = Backbone.View.extend({
                         menu['load_rule']  = {
                             name: 'Load',
                             callback: function() {
-                                that.loadAuditRule(itemId);
+                                that.loadAuditRule(itemId, itemLabel);
                             }//eof:callback
                         };
 
@@ -206,54 +207,50 @@ var NetworkAuditView = Backbone.View.extend({
      * @since 1.0.0
      * @return void
      */
-    loadAuditRule: function(ruleId){
+    loadAuditRule: function(ruleId, ruleName, parentName){
         var that = this;
         var tabId = this.tabId + '_audit_rule_' + ruleId;
 
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: 'Loading rule...',
+            title: '<i class="fa fa-wrench"></i> ' + ruleName,
             content: this.ruleTableTemplate({ruleName: 'Loading ...'})
             //content: AppUI.I().Loading('<h3>Loading network audit rule...</h3>')
         });
         AppUI.I().Tabs().show({id: tabId});
-        
-        var ruleName = "";
-        //Get rule details 
-        var auditRuleModel = new AuditRuleModel({id: ruleId});
-        auditRuleModel.fetch({success: function(model,response,options){
-            var tabTitle =  '<i class="fa fa-wrench"></i> ' + 
-                model.get("name");
-            AppUI.I().Tabs().setTitle({
-                id: tabId,
-                title: tabTitle
-            });
-            
-            ruleName = model.get("name");
-            $('#' + tabId + ' h3').html('<img src="'+moduleIcon+'" width="25px"/> ' + ruleName);
 
-        }});
-
-        //console.log(auditRuleModel);
-        
         //Construct tr for table header and footer
         var tr = '';
         var ruleFields = [];
-        //Get rule fields and create datatable html
-       var auditRuleFieldCollection = new AuditRuleFieldCollection();
        
-       //Set the rule id in the collections url
-       auditRuleFieldCollection.url = auditRuleFieldCollection.url + ruleId;
-       auditRuleFieldCollection.fetch({
-           success: function(collection){
-               
-               _(collection.models).each(function(model){
-                   tr += '<th>'+model.get('name') + '</th>';
-                   ruleFields.push({name:model.get("name"), data: model.get("name")});
+        $.ajax({
+            url: API_URL + '/api/networkaudit/rule/fields/' + ruleId,
+            type: "GET",
+            data: {},
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                //Load the html template for the mo datatable
+                AppUI.I().Tabs().setContent({
+                    id: tabId, 
+                    content: (_.template(rulesTmpl))({ruleName: ruleName})
+                });
+
+                var ruleDTId = 'rule_dt_' + ruleId;
+                
+                //Construct tr for table header and footer
+                var tr = '';
+                var ruleFields = [];
+                
+                //Construct the tr data and also populate moFields
+               _(data).each(function(field){
+                   tr += '<th>'+field + '</th>';
+                   
+                   //Class to use for drop targets
+                   var filterCls='drop-target-'+field+'-'+ruleDTId;
+                   ruleFields.push({name:field, data: field , title: '<span onclick=" event.stopPropagation();" class="glyphicon glyphicon-filter  filter-icon '+filterCls+'"></span>'+field + '&nbsp;' });
+                   
                });
                tr = '<tr>' + tr + '</tr>';
-               
-               var ruleDTId = 'rule_dt_' + ruleId;
                
                //Build table
                var tableHtml = '<table id="'+ruleDTId+'" class="table table-striped table-bordered dataTable" width="100%">';
@@ -261,24 +258,20 @@ var NetworkAuditView = Backbone.View.extend({
                tableHtml += '<tfoot>' + tr + '</tfoot>';
                tableHtml += '</table>';
                
-               //Add html to tab content area
                $('#'+tabId + ' .rule-datatable').html(tableHtml);
 
                //Initiate datatable to display rules data
                var ruleDataTable = $('#'+ruleDTId).DataTable({
-                    //"scrollX": true,
-                    //"scrollY": true,
+                    "scrollX": true,
+                    "scrollY": true,
                     "pagingType": 'full_numbers', 
                     "processing": true,
                     "serverSide": true,
                      colReorder: true,
                     "ajax": {
-                        "url": API_URL + '/api/networkaudit/rule/dt_data/'+ruleId,
-                        "type": "POST",
-                        'contentType': 'application/json',
-                        'data': function(d) {
-				return JSON.stringify(d);
-			}
+                        "url": API_URL + '/api/networkaudit/rule/dt/'+ruleId,
+                        "type": "GET",
+                        'contentType': 'application/json'
                     },
                     "columns": ruleFields,
                     "language": {
@@ -295,16 +288,6 @@ var NetworkAuditView = Backbone.View.extend({
                         $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default"><i class="fa fa-refresh"></i></span>');
                         $('#'+ruleDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
                             ruleDataTable.api().ajax.reload();
-                        });
-                        
-                        //Add evaluation button
-                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <buttion class="btn btn-primary btn-md bd-evaluate"><i class="fa fa-play"></i>  Evaluate</button>');
-                        
-                        $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','.bd-evaluate',function(){
-                            $('#'+tabId+ ' .bd-notice').html(AppUI.I().Loading('Evaluating rule...'));
-                            $.get(API_URL + '/api/networkaudit/rule/evaluate/'+ruleId, {}, function(data){
-                                console.log(data);
-                            });
                         });
                         
                         //Export button
@@ -388,50 +371,56 @@ var NetworkAuditView = Backbone.View.extend({
                             }
                         });
                         
-                        //Per column filtering options
-                         $('#'+ruleDTId + ' thead th').each( function (idx) {
-                                
-                             //Advanced search dropdown with bootstrap dropdown menU
-                            //Implement per column filtering options
-                            //Add the filter icon
-                            var fClass=ruleDTId + '-column-filter-'+idx;
-                            var h = '<span class="glyphicon glyphicon-filter pull-right filter-icon '+fClass+'"></span>';
-                            $(this).addClass('filtering');
-                            //$(this).append(advFilterHtml);
-                            $(this).append(h);
-
-                            //Tether drop
-                            //Add advanced filtering with tether-drop
-                            var divId = tabId+'_column-filter-html-'+idx;
+                        
+                        //Add per column filtering
+                        _.forEach(ruleFields, function(field, idx){
+                             
+                             var filterCls='drop-target-'+field.name+'-'+ruleDTId;
+                             var filterId ='drop_target_'+field.name +'_'+ruleDTId;;
+                              
                             var advancedFilterHtml = '\
-                            <div class="" id="'+divId+'">\
-                                <input type="text" placeholder="Search..." value="" class="form-control per-column-search"/>\
+                            <div class="" class="advanced-filter" id="'+filterId+'">\
+                                <input type="text" placeholder="Search..." value="" \
+                                    class="form-control per-column-search" data-column-index='+idx+' \
+                                    data-column-name="'+field.name+'"/>\
                                 <div></div>\
                             </div>\
                             ';
                              
                             var dropInstance = new Drop({
-                                target: document.querySelector('.'+fClass),
+                                target: document.querySelector('.' + filterCls),
                                 content: advancedFilterHtml,
                                 classes: 'drop-theme-arrows',
                                 position: 'bottom center',
                                 openOn: 'click'
                               });
-                                
-                            $('body').on('input', '#' + divId + ' .per-column-search', function(){
-                                ruleDataTable.api().column(idx).search($(this).val()).draw();
+                              
+                              
+                            //Add filtering logic  
+                            $('body').on('input','#' +filterId+ ' input.per-column-search', function(){
+                                var colIdx = $(this).data('column-index');
+                                var colName= $(this).data('column-name');
+
+                                //@TODO: sanitize class name
+                                var filterCls='drop-target-'+colName+'-'+ruleDTId;
+                                //var filterId ='drop_target_'+colName +'_'+moDTId;;
+
+
+                                ruleDataTable.api().column(colIdx).search($(this).val()).draw();
                                 var searchValue = $(this ).val();
 
                                 //Highlight wich columns have filters on by 
                                 //changing the filter color to blue
                                 if(searchValue != ""){
-                                    $('.' + fClass ).css("color","#2e6da4");
+                                    $('.' + filterCls ).css("color","#2e6da4");
                                 }else{
-                                    $('.' + fClass ).css("color","#999996");
+                                    $('.' + filterCls ).css("color","#999996");
                                 }
+
+
                             });
-                         } ); //end of foearch
-                         
+                         });
+                         //eof:add per column filtering
    
 
                         //Add settings icons 
@@ -457,10 +446,11 @@ var NetworkAuditView = Backbone.View.extend({
 
                     }//eof: initComplete
                });
-           }
-       });
-     
-       
+
+
+            }
+        });
+
     },
     
     /**
