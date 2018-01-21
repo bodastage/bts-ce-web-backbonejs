@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "licence": "Apache 2.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node_modules/karma/bin/karma start karma.conf.js --single-run",
     "watch": "webpack --watch",
     "build": "webpack",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "report-coverage": "codecov",
   },
   "keywords": [
     "util",
