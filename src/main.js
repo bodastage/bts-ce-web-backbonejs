@@ -66,8 +66,7 @@ require('datatables.net-bs/css/dataTables.bootstrap.css');
 require( 'datatables.net-colreorder' );
 
 //Set API URL
-window.API_URL = $.getParameterByName('api_server') || 'http://localhost:8181';
-//window.API_URL = 'http://192.168.43.252:8080';
+window.API_URL = $.getParameterByName('api_server') || 'http://'+ window.location.hostname +':8181';
 
 console.log(window.API_URL);
 
