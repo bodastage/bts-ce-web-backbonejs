@@ -76,6 +76,7 @@
     "style-loader": "^0.18.2",
     "tls": "0.0.1",
     "uglify": "^0.1.5",
+    "uglifyjs-webpack-plugin": "^1.1.8",
     "url-loader": "^0.5.9",
     "webpack": "^3.4.1",
     "xml-loader": "^1.2.1"

@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const config = {
     entry: [
@@ -61,7 +62,8 @@ const config = {
             template: __dirname + '/src/index.html'
         }),
         //new ExtractTextPlugin("styles.css"),
-        new FaviconsWebpackPlugin('./src/images/antenna_blue_64.png')
+        new FaviconsWebpackPlugin('./src/images/antenna_blue_64.png'),
+        new UglifyJsPlugin()
     ]
 };
 
