@@ -39,7 +39,11 @@ const config = {
             {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'},
             {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml'},
             {test: /tabdrop/, loader: "imports-loader?define=>undefined,exports=>undefined" },
-            {test: /\.(png|jpg|gif)$/, use: [{loader: 'url-loader',options: {limit: 8192}}]}
+            {test: /\.(png|jpg|gif)$/, use: [{loader: 'url-loader',options: {limit: 8192}}]},
+            {
+              test: /fuelux\/js\/.*\.js$/,
+              use: ['imports-loader?define=>false']
+            }
         ],
         loaders: [
             {test: /\.css$/, loader: "style-loader!css-loader"},

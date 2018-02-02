@@ -26,7 +26,8 @@ var DashboardView = Backbone.View.extend({
         //Left side pane items
         AppUI.I().ModuleMenuBar().setTitle('<i class="fa fa-plug"></i> Modules');
         AppUI.I().getLeftModuleArea().html(_.template(leftPaneTemplate));
-    }
+    },
+
 });
 	
 module.exports = DashboardView;
