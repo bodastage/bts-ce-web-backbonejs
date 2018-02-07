@@ -6,6 +6,7 @@ var SettingsCollection = require('../collections/settings_collection');
 var CMMenuTmpl = require('html-loader!../templates/settings/cm-settings-options.html');
 var CMScheduleTmpl = require('html-loader!../templates/settings/cm-settings-schedule.html');
 var CMFileFetchTmpl = require('html-loader!../templates/settings/cm-settings-file-fetch.html');
+var CMFileFormatsTmpl = require('html-loader!../templates/settings/cm-settings-file-formats.html');
 
 var SettingsView = Backbone.View.extend({
     el: 'body',
@@ -20,6 +21,7 @@ var SettingsView = Backbone.View.extend({
         "click .show-cm-schedule": "showCMSchedule",
         "click .save-cm-schedule": "saveCMSchedule",
         "click .show-cm-file-fetch": "showFileFetch",
+        "click .show-cm-file-formats": "showCMFileFormats",
     },
     
     /**
@@ -125,6 +127,12 @@ var SettingsView = Backbone.View.extend({
         //});
     },
     
+    /**
+     * Save CM ETL Schedule
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     saveCMSchedule: function(){
         var that = this;
         var tabId = this.tabId + "_cm_schedule";
@@ -194,8 +202,10 @@ var SettingsView = Backbone.View.extend({
     },
     
     /**
-     * 
      * Show file fetch settings
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
      */
     showFileFetch: function(){
         var that = this;
@@ -205,6 +215,61 @@ var SettingsView = Backbone.View.extend({
             title: '<i class="fa fa-cog"></i> CM File Fetch',
             content: (_.template(CMFileFetchTmpl))()
         });
+    },
+    
+    /**
+     * Show file format settings
+     * 
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    showCMFileFormats: function(){
+        var that = this;
+        var tabId = this.tabId + "_cm_file_formats";
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-cog"></i> CM ETL File Formats',
+            content: (_.template(CMFileFormatsTmpl))()
+        });
+        
+        var tableDTId = 'cm_file_formats_dt';
+        
+        var cmFileFormatsDT = $('#'+tableDTId).DataTable({
+             "scrollX": true,
+             "scrollY": true,
+             "pagingType": 'full_numbers',  
+             "processing": true,
+             "serverSide": true,
+              colReorder: true,
+             "ajax": {
+                 "url": API_URL + '/api/settings/cm/vendor_format_map/dt',
+                 "type": "GET",
+                 'contentType': 'application/json',
+             },
+             "columns": [
+                 {name:'vendor', data: "vendor" , title: "Vendor"},
+                 {name:'technology', data: "technology" , title: "Technology"},
+                 {name:'format', data: "format" , title: "Format"},
+             ],
+             "language": {
+                 "zeroRecords": "No matching data found",
+                 "emptyTable": "There is no data."
+             },
+             "dom": 
+                 "<'row'<'col-sm-9'l><'col-sm-3'f>>" +
+                 "<'row'<'col-sm-12'tr>>" +
+                 "<'row'<'col-sm-5'i><'col-sm-7'p>>", 
+             "initComplete": function(){
+                 //Refresh button
+                 $('#'+tableDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                 $('#'+tableDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                     cmFileFormatsDT.api().ajax.reload();
+                 });
+
+             }
+         });//end
+                
+                
     }
 });
 	
