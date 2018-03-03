@@ -36,6 +36,10 @@ require('../vendors/leaflet-ruler/src/leaflet-ruler.css');
 //Leaflet area select 
 require('leaflet-area-select');
 
+//Bootstrap switch/toggle
+require('bootstrap-toggle');
+require('bootstrap-toggle/css/bootstrap-toggle.min.css');
+
 //Get URL parameters
 // @TODO: Move to separate jqeury plugin 
 

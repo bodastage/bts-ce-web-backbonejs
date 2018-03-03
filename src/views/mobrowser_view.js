@@ -99,8 +99,8 @@ var MOBrowserView = Backbone.View.extend({
 
         var aciTreeAPI = $('#mo_tree').aciTree({
             ajax: {
-                //url: API_URL + '/api/managedobjects/tree/0',
-                url: API_URL + '/api/managedobjects/tree/cached',
+                url: API_URL + '/api/managedobjects/tree/0',
+                //url: API_URL + '/api/managedobjects/tree/cached',
                 data:{
                     tech_pk: function(){ return $(that.$el).find('#bd_mobrowser_select_tech').val(); },
                     vendor_pk: function(){ return $(that.$el).find('#bd_mobrowser_select_vendor').val();}, 

@@ -2,11 +2,12 @@
  * Telecom Library
  * 
  * @version 1.0.0
- * @author Bodastage Engineering <dev@bodastage.com>
+ * @author Bodastage Engineering <engineering@bodastage.com>
  */
 
 var dashboardTmpl = require('raw-loader!../templates/telecomlib/dashboard.html');
 var vendorsTmpl = require('raw-loader!../templates/telecomlib/vendors.html');
+var techTmpl = require('raw-loader!../templates/telecomlib/technologies.html');
 
 var TelecomLibView = Backbone.View.extend({
    el: 'body',
@@ -17,7 +18,8 @@ var TelecomLibView = Backbone.View.extend({
    tabId: 'tab_inventory',
    
    events: {
-       "click .load-vendors": "loadVendors"
+       "click .load-vendors": "loadVendors",
+       "click .load-technologies": "loadTechnologies"
    },
    
    /**
@@ -60,6 +62,8 @@ var TelecomLibView = Backbone.View.extend({
 
     /**
      * Load vendors
+     * 
+     * @since 1.0.0
      */
     loadVendors: function(){
         var tabId = this.tabId + '_vendors';
@@ -77,11 +81,53 @@ var TelecomLibView = Backbone.View.extend({
             dataFormat: "json",
             "success": function(data, textStatus, jqXHR ){
                 var h = '';
+                
                 $.each(data, function(idx, vendor){
-                    h += '<tr><td>'+vendor.name+'</td><td><i class="fa fa-check-circle-o success alert-success"></i></td></tr>';
+                    h += '<tr><td>'+vendor.name+'</td><td>'+ vendor.notes + '</td></tr>';
                 })
                 
                 $('#dt_vendors tbody').html(h);
+                
+
+            },
+            "error": function(jqXHR, textStatus, errorThrown ){
+                try{
+                var response = JSON.parse(jqXHR.responseText);
+                    $('#'+tabId + ' .bd-notice').html(AppUI.I().Alerts({close:true}).Error(response.message))
+                }catch(e){
+                    $('#'+tabId + ' .bd-notice').html(AppUI.I().Alerts({close:true}).Error("Error occured!"))
+                }
+            }
+        });
+    },
+    
+
+    /**
+     * Load technologies
+     */
+    loadTechnologies: function(){
+        var tabId = this.tabId + '_technologies';
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<i class="fa fa-bank"></i> Technologies</b>',
+            content: techTmpl 
+        });
+        AppUI.I().Tabs().show({id: tabId});
+        
+        $.ajax({
+            url: API_URL + '/api/technologies',
+            type: "GET",
+            dataFormat: "json",
+            "success": function(data, textStatus, jqXHR ){
+                var h = "";
+
+                $.each(data, function(idx, tech){
+                    h += '<tr><td>'+tech.name+'</td><td>'+tech.notes+'</td></tr>';
+                })
+                
+                $('#dt_technologies tbody').html(h);
+
             },
             "error": function(jqXHR, textStatus, errorThrown ){
                 try{

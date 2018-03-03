@@ -1,0 +1,59 @@
+<div class="bd-notice"></div>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><b><i class="fa fa-cog"></i> Supported Vendors Technologies</b></div>
+    <div class="panel-body">
+        
+        <form id="nw_supported_vendors_techs_form">
+            
+            <!-- vendor -->
+            <div class="form-group">
+                <label for="vendor">Vendor</label>
+                <select class="form-control" name="vendor">
+                    <option value="0">--Select vendor--</option>
+                </select>
+            </div>
+            <!--/ vendor -->
+            
+            <!-- technology -->
+            <div class="form-group">
+                <label for="technology">Technology</label>
+                <select class="form-control" name="technology">
+                    <option value="0">--Select technology--</option>
+                </select>
+            </div>
+            <!--/ technology -->
+            
+            <!-- submit -->
+            <div class="form-group">
+                <div class="">
+                  <button type="submit" class="btn btn-blue">Add</button>
+                </div>
+            </div>
+            <!-- submit -->
+        </form>
+        
+        <!-- table -->
+        <table id="nw_supported_vendors_techs_dt" class="table table-striped table-bordered dataTable" width="100%">
+            <thead>
+                <tr>
+                  <th scope="col">vendor</th>
+                  <th scope="col">technology</th>
+                  <th scope="col">pk</th>
+                </tr>
+            </thead>  
+            
+            <tbody></tbody>
+            
+            <tfoot class="hidden">
+                <tr>
+                  <th >vendor</th>
+                  <th >technology</th>
+                  <th >pk</th>
+                </tr>
+            </tfoot>  
+            
+        </table>
+        <!-- /table -->
+    </div>
+</div>
