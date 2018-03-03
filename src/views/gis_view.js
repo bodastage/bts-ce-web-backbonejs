@@ -129,7 +129,6 @@ var GISView = Backbone.View.extend({
             'dataFormat': 'json',
             'data': { page: 0, size: 1 },
             success: function(data){
-                console.log(data);
                 latitude = data.content[0].latitude;
                 longitude = data.content[0].longitude;
                         

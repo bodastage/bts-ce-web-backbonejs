@@ -314,7 +314,7 @@ var SettingsView = Backbone.View.extend({
               "columnDefs": [
                   {
                         "render": function ( data, type, row ) {
-                            return  '<a href="#" data-pk="'+data+'"><i class="fa fa-minus-circle text-danger"></i></a>';
+                            return  '<a href="#" class="delete-vendor-tech" data-pk="'+data+'"><i class="fa fa-minus-circle text-danger "></i></a>';
                         },
                         "targets": 2
                   }
@@ -334,6 +334,45 @@ var SettingsView = Backbone.View.extend({
                      jqDT.api().ajax.reload();
                  });
 
+                //Delete vendor and technology map 
+                //Submit vendor and tech
+                $('#' + tabId  ).find('#nw_supported_vendors_techs_dt .delete-vendor-tech').click(function(){
+
+                    $('#' + tabId).find('.bd-notice').html(
+                        AppUI.I().Loading("Deleting vendor and technology map...")
+                    );
+
+                    var map_id = $(this).data("pk");
+
+                    console.log('map:' + map_id);
+
+                    $.ajax({
+                        "url": API_URL + '/api/settings/network/technologies/' + map_id,
+                        "type": "DELETE",
+                        'dataFormat': 'json',
+                        "success": function(data, xhr){
+                            if(data.status === 'success'){
+                                $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                                    .Alerts({close:true})
+                                    .Success('Vendor and technology map deleted')
+                                );
+                                jqDT.api().ajax.reload();
+                            }else{
+                                $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                                    .Alerts({close:true})
+                                    .Error('Failed to delete vendor and technology map')
+                                );        
+                            }
+                        },
+                        "error": function(){
+                            $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                                .Alerts({close:true})
+                                .Error('Failed to delete vendor and technology map')
+                            );                 
+                        }
+                    })
+                });
+                //end of delete
              }
          });//end
          
@@ -366,22 +405,56 @@ var SettingsView = Backbone.View.extend({
          
         //Submit vendor and tech
         $('#' + tabId ).find('#nw_supported_vendors_techs_form [type=submit]').click(function(){
-            console.log('tech:' + $(techField).val());
-            console.log('vendor:' +$(vendorField).val());
+
+            $('#' + tabId).find('.bd-notice').html(
+                    AppUI.I().Loading("Adding vendor and technology map...")
+            );
+
             var tech_pk = $(techField).val();
             var vendor_pk = $(vendorField).val();
             
             if(tech_pk == 0 || vendor_pk == 0 ){
-               $(that.$el).find('.bd-notice').html(AppUI.I()
+               $('#' + tabId).find('.bd-notice').html(AppUI.I()
                        .Alerts({close:true})
                        .Error('Select a technology and vendor')
                     );
             }else{
-                
+                $.ajax({
+                    "url": API_URL + '/api/settings/network/technologies',
+                    "type": "POST",
+                    'dataFormat': 'json',
+                    'data': JSON.stringify({vendor_pk: vendor_pk, tech_pk: tech_pk}),
+                    'contentType': 'application/json',
+                    "success": function(data, xhr, status){
+                        if(data.status == 'success'){
+                            $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                                .Alerts({close:true})
+                                .Success('Vendor and technology map added')
+                            );
+                            jqDT.api().ajax.reload();
+                        }else{
+                            $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                                .Alerts({close:true})
+                                .Error('Failed to add vendor and technology map')
+                            );
+                        }
+                    },
+                    "error": function(){
+                        $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                           .Alerts({close:true})
+                           .Error('Failed to add vendor and technology map')
+                        );
+                    }
+                });
             }
+            
+    
+
+            
         });
         
     }
+
 });
 	
 module.exports = SettingsView;
