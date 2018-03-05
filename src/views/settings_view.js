@@ -261,7 +261,7 @@ var SettingsView = Backbone.View.extend({
             "columnDefs": [
                   {
                         "render": function ( data, type, row ) {
-                            return  '<a href="#" class="delete-vendor-format" data-pk="'+data+'"><i class="fa fa-minus-circle text-danger "></i></a>';
+                            return  '<a href="#" class="delete-cm-file-format" data-pk="'+data+'"><i class="fa fa-minus-circle text-danger "></i></a>';
                         },
                         "targets": 3
                   }
@@ -302,10 +302,8 @@ var SettingsView = Backbone.View.extend({
         
         //Add formats for specific vendor and technology map 
         var cmFileFormatField = $(that.$el).find('#cm_file_formats_form [name=vendor_tech_cm_formats]');
-        
-
         $(vendorTechField).change(function(){
-            console.log('cmFileFormatField on change event');
+
             var vendor_tech_id = $(this).val();
             
             
@@ -328,8 +326,92 @@ var SettingsView = Backbone.View.extend({
             });
         });
     
-    
-    
+        //Add format 
+        //Submit vendor and tech
+        $('#' + tabId ).find('#cm_file_formats_form [type=submit]').click(function(){
+
+            $('#' + tabId).find('.bd-notice').html(
+                    AppUI.I().Loading("Adding format...")
+            );
+
+            var formatId = $(cmFileFormatField).val();
+            var vendorTechId = $(vendorTechField).val();
+            
+            if(formatId == 0 || vendorTechId == 0 ){
+               $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                       .Alerts({close:true})
+                       .Error('Select a format and vendor/technology')
+                    );
+            }else{
+                $.ajax({
+                    "url": API_URL + '/api/settings/cm/vendor_format_map',
+                    "type": "POST",
+                    'dataFormat': 'json',
+                    'data': JSON.stringify({vendor_tech_id: vendorTechId, format_id: formatId}),
+                    'contentType': 'application/json',
+                    "success": function(data, xhr, status){
+                        if(data.status == 'success'){
+                            $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                                .Alerts({close:true})
+                                .Success('Format added')
+                            );
+                            cmFileFormatsDT.api().ajax.reload();
+                        }else{
+                            $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                                .Alerts({close:true})
+                                .Error('Failed to add format. ' + data.message)
+                            );
+                        }
+                    },
+                    "error": function(){
+                        $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                           .Alerts({close:true})
+                           .Error('Failed to add format')
+                        );
+                    }
+                });
+            }
+            
+            return false;
+        });
+        
+        //Delete vendor and technology map 
+        $('#' + tabId ).on('click','#cm_file_formats_dt .delete-cm-file-format',function(event){
+
+            $('#' + tabId).find('.bd-notice').html(
+                AppUI.I().Loading("Deleting vendor file format...")
+            );
+        
+            var format_id = $(this).data("pk");
+
+            $.ajax({
+                "url": API_URL + '/api/settings/cm/vendor_format_map/' + format_id,
+                "type": "DELETE",
+                'dataFormat': 'json',
+                "success": function(data, xhr){
+                    if(data.status === 'success'){
+                        $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                            .Alerts({close:true})
+                            .Success('File format deleted')
+                        );
+                        cmFileFormatsDT.api().ajax.reload();
+                    }else{
+                        $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                            .Alerts({close:true})
+                            .Error('Failed to delete file format')
+                        );        
+                    }
+                },
+                "error": function(){
+                    $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                        .Alerts({close:true})
+                        .Error('Failed to delete file format')
+                    );                 
+                }
+            });
+        
+            //$( this ).off( event );
+        });
     },
     
     

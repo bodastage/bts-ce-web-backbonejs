@@ -28,7 +28,7 @@ var ProcessesView = Backbone.View.extend({
     
     render: function () {
         this.loadDashboard();
-        this.loadLeftPanel();
+        //this.loadLeftPanel();
     },
     
     /**
