@@ -304,42 +304,8 @@ var NetworkAuditView = Backbone.View.extend({
                             </span> ';
                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(exportButtonHtml);
                        $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','li > a.export-csv',function(){
-                            $('#'+tabId+ ' .bd-notice').html(AppUI.I().Loading('Exporting csv...'));
-                            $.get(API_URL + '/api/networkaudit/rule/export/'+ruleId, {}, function(data){
-                                console.log(data);
-                               var meta = JSON.parse(data.meta);
-                               var successHtml = '<i class="fa fa-download"></i> File generated successfully. Download fie: <a href="'+API_URL+'/api/networkaudit/download/'+meta.file_name+'" target="_blank">' + meta.file_name + "</a>";
-                               if(data.status === 'COMPLETED'){
-                                   var successHtml = '<i class="fa fa-download"></i> File generated successfully. Download fie: <a href="'+API_URL+'/api/networkaudit/download/'+meta.file_name+'" target="_blank">' + meta.file_name + "</a>";
-                                   $('#'+tabId+ ' .bd-notice').html(AppUI.I().Alerts({close: true}).Success(successHtml));
-                               }else if( data.status === 'STARTED' || data.status === 'STARTING'){ //If export generation status is pending, waiting and check again
-                                    
-                                    //
-                                    var tryExportAgain = function(){
-                                       //Check job status
-                                       $.get(API_URL + '/api/networkaudit/rule/export/status/' + data.id, function(data){
-                                           console.log(data);
-                                           var statusMeta = JSON.parse(data.meta);
-                                           if(data.status === 'COMPLETED'){
-                                               $('#'+tabId+ ' .bd-notice').html(AppUI.I().Alerts({close: true}).Success(successHtml));
-                                           }else if(data.status === 'FAILED'){
-                                               $('#'+tabId+ ' .bd-notice').html(AppUI.I().Alerts({close: true}).Error("Failed to generate file"));
-                                           }else{
-                                               //Check every second
-                                               setTimeout(3000*1000*30, tryExportAgain());
-                                           }
-                                       });
-                                   }
-                                   tryExportAgain();
-                                   
-                               }else{ //Failed to generated export file.
-                                    $('#'+tabId+ ' .bd-notice')
-                                        .html(
-                                            AppUI.I().Alerts({close: true})
-                                                .Error('Failed to generate export file!')
-                                        );
-                               }
-                           });
+                           var ruleId = $(this).data('index');
+                             window.location.href = API_URL + '/api/networkaudit/download/rule/' + ruleId;
                        });
                        
                         //Columns
