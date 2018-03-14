@@ -241,17 +241,42 @@ var NetworkAuditView = Backbone.View.extend({
                 //Construct tr for table header and footer
                 var tr = '';
                 var ruleFields = [];
+                var columnDefs = []
                 
-                //Construct the tr data and also populate moFields
+                var fieldIndex = -1;
+                //Construct the tr data and also populate ruleFields array
                _(data).each(function(field){
+                   fieldIndex++;
+                   
                    tr += '<th>'+field + '</th>';
                    
                    //Class to use for drop targets
                    var filterCls='drop-target-'+field+'-'+ruleDTId;
+                   
+                   //Add columnDefinitions
+                   if(field === 'pk' || field === 'added_by' || field === 'modified_by'){//Hide pk column
+                       columnDefs.push({ "visible": false,  "targets": [ fieldIndex ] });
+                   }
+
+                   if( field === 'date_added'){
+                       var title = 'date_first_found';
+                       ruleFields.push({name:field, data: field , title: '<span onclick=" event.stopPropagation();" class="glyphicon glyphicon-filter  filter-icon '+filterCls+'"></span>'+title + '&nbsp;' });
+                       return;
+                   }
+                   
+                   if( field === 'date_modified'){
+                       var title = 'date_last_found';
+                       ruleFields.push({name:field, data: field , title: '<span onclick=" event.stopPropagation();" class="glyphicon glyphicon-filter  filter-icon '+filterCls+'"></span>'+title + '&nbsp;' });
+                       return;
+                   }
+                   
                    ruleFields.push({name:field, data: field , title: '<span onclick=" event.stopPropagation();" class="glyphicon glyphicon-filter  filter-icon '+filterCls+'"></span>'+field + '&nbsp;' });
                    
                });
                tr = '<tr>' + tr + '</tr>';
+               
+//               console.log(columnDefs);
+//               console.log(ruleFields);
                
                //Build table
                var tableHtml = '<table id="'+ruleDTId+'" class="table table-striped table-bordered dataTable" width="100%">';
@@ -275,6 +300,7 @@ var NetworkAuditView = Backbone.View.extend({
                         'contentType': 'application/json'
                     },
                     "columns": ruleFields,
+                    "columnDefs": columnDefs,
                     "language": {
                         "zeroRecords": "No matching data found",
                         "emptyTable": "Audit rule has no data."
@@ -290,58 +316,23 @@ var NetworkAuditView = Backbone.View.extend({
                         $('#'+ruleDTId + '_wrapper .dataTables_length .fa-refresh').click(function(){
                             ruleDataTable.api().ajax.reload();
                         });
+                        //----------------------------------
                         
-                        //Export button
-                        //@TODO: Add option to zip file
-                        //@TODO: Add other export file formats like Excel
-                        var exportButtonHtml = ' \
-                            <span class="dropdown"> \
-                              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><span class="glyphicon glyphicon-download"></span> Export \
-                              <span class="caret"></span></button> \
-                              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
-                                <li role="presentation"><a role="menuitem" href="#" data-index="'+ruleId+'" class="export-csv">CSV</a></li> \
-                              </ul> \
-                            </span> ';
-                       $('#'+ruleDTId + '_wrapper .dataTables_length').append(exportButtonHtml);
-                       $('#'+ruleDTId + '_wrapper .dataTables_length').on('click','li > a.export-csv',function(){
-                           var ruleId = $(this).data('index');
-                             window.location.href = API_URL + '/api/networkaudit/download/rule/' + ruleId;
-                       });
-                       
-                        //Columns
-                        var columnLi = '';
-                        for(var i=0; i< ruleFields.length; i++){
-                           columnLi += '<li><a role="menuitem" href="#">\
-                            <input type="checkbox" class="columns-visible" checked="checked" value="'+ i +'"/> '
-                            + ruleFields[i].data.toUpperCase()+'</a></>';
-                        }
-                       
-                        var columnButtonHtml = ' \
-                            <span class="dropdown column-visible"> \
-                              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-th-list"></i> Columns \
-                              <span class="caret"></span></button> \
-                              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> ';
                         
-                        columnButtonHtml += columnLi;
-                        
-                        columnButtonHtml += '<li role="presentation" class="divider"></li> \
-                                <li role="presentation"><a role="menuitem" href="#"><input type="checkbox" checked="checked" value=""/> All</a></li> \
-                              </ul> \
-                            </span> ';
-                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(columnButtonHtml);
-                        $('#'+ruleDTId + '_wrapper input.columns-visible').click(function(event){
-                            var columnIndex = $(this).val();
-                            if( $(this).is(':checked')){
-                                ruleDataTable.api().column(columnIndex).visible(true);
-                            }else{
-                                ruleDataTable.api().column(columnIndex).visible(false);
-                            }
+                        //Download button
+                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default export-csv"><i class="fa fa-cloud-download"></i></span>');
+                        $('#'+ruleDTId + '_wrapper .dataTables_length .export-csv').click(function(){
+                            window.location.href = API_URL + '/api/networkaudit/download/rule/' + ruleId;
                         });
-                        
+                        //----------------------------------
                         
                         //Add per column filtering
                         _.forEach(ruleFields, function(field, idx){
-                             
+
+                            //pk is hidden
+                            if(field.name === 'pk' || field.name === 'added_by' 
+                                    || field.name === 'modified_by'){ return;}
+
                              var filterCls='drop-target-'+field.name+'-'+ruleDTId;
                              var filterId ='drop_target_'+field.name +'_'+ruleDTId;;
                               
@@ -388,27 +379,8 @@ var NetworkAuditView = Backbone.View.extend({
                             });
                          });
                          //eof:add per column filtering
-   
-
-                        //Add settings icons 
-                        var btnSettingsHtml = '<span class="btn btn-default"><i class="fa fa-cog"></i> Configuration</span>';
-                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(btnSettingsHtml);
-                        
-                        //Count graph
-                        var btnCountHtml = ' \
-                            <span class="dropdown"> \
-                              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><i class="fa fa-history"></i> Count \
-                              <span class="caret"></span></button> \
-                              <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> \
-                                <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-th-list"></i> Table</a></li> \
-                                <li role="presentation"><a role="menuitem" href="#" class="rule-count-graph"><i class="fa fa-area-chart "></i> Gragh</a></li> \
-                              </ul> \
-                            </span> ';
-                        $('#'+ruleDTId + '_wrapper .dataTables_length').append(btnCountHtml);
-                        $('#'+ruleDTId + '_wrapper .rule-count-graph').click(function(event){
-                            console.log('Testing...');
-                            that.loadCoundGraph({ruleId: ruleId, ruleName: ruleName, ruleTabId: tabId });
-                        });                                            
+                         //----------------------------------
+                                   
     
 
                     }//eof: initComplete
