@@ -53,8 +53,8 @@ var BaselineView = Backbone.View.extend({
         
         //Initialize datatable
         $('#dt_baseline_values').DataTable({
-            "scrollX": true,
-            "scrollY": true,
+            //"scrollX": true,
+            //"scrollY": true,
             "pagingType": 'full_numbers',
             "processing": true,
             "serverSide": true,

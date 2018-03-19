@@ -322,6 +322,7 @@ var NetworkAuditView = Backbone.View.extend({
                         //Download button
                         $('#'+ruleDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default export-csv"><i class="fa fa-cloud-download"></i></span>');
                         $('#'+ruleDTId + '_wrapper .dataTables_length .export-csv').click(function(){
+                            $('#' + tabId + " .bd-notice").html(AppUI.I().Alerts({close:true}).Info('File will download shortly...'));
                             window.location.href = API_URL + '/api/networkaudit/download/rule/' + ruleId;
                         });
                         //----------------------------------
