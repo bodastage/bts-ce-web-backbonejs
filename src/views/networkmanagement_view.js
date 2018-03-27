@@ -222,8 +222,10 @@ var NetworkManagementView = Backbone.View.extend({
             content: relationsTemplate
         });
 
+        var dtId = 'dt_netmgt_all_relations';
+        
         //Initialize datatable
-        $('#dt_netmgt_all_relations').DataTable({
+        var nbrsDT = $('#dt_netmgt_all_relations').DataTable({
             "scrollX": true,
             "scrollY": true,
             "pagingType": 'full_numbers',
@@ -263,7 +265,11 @@ var NetworkManagementView = Backbone.View.extend({
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             "initComplete": function () {
-
+                //Refresh button
+                $('#'+dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                $('#'+dtId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                    nbrsDT.api().ajax.reload();
+                });
             }
         });//end
     },
@@ -360,7 +366,7 @@ var NetworkManagementView = Backbone.View.extend({
         var dtId = 'dt_all_network_sites';
         
         //Initialize datatable
-        var dtId = $('#dt_all_network_sites').DataTable({
+        var sitesDT = $('#dt_all_network_sites').DataTable({
             "scrollX": true,
             "scrollY": true,
             "pagingType": 'full_numbers',
@@ -395,7 +401,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Refresh button
                 $('#'+dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
                 $('#'+dtId + '_wrapper .dataTables_length .fa-refresh').click(function(){
-                    nodesDT.api().ajax.reload();
+                    sitesDT.api().ajax.reload();
                 });
             }
         });//end
