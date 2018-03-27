@@ -357,8 +357,10 @@ var NetworkManagementView = Backbone.View.extend({
             content: networkSitesTemplate
         });
 
+        var dtId = 'dt_all_network_sites';
+        
         //Initialize datatable
-        $('#dt_all_network_sites').DataTable({
+        var dtId = $('#dt_all_network_sites').DataTable({
             "scrollX": true,
             "scrollY": true,
             "pagingType": 'full_numbers',
@@ -390,7 +392,11 @@ var NetworkManagementView = Backbone.View.extend({
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
             "initComplete": function () {
-
+                //Refresh button
+                $('#'+dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
+                $('#'+dtId + '_wrapper .dataTables_length .fa-refresh').click(function(){
+                    nodesDT.api().ajax.reload();
+                });
             }
         });//end
     },
