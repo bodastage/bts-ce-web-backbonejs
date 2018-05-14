@@ -2,6 +2,7 @@
 
 var dashboardTemplate =  require('html-loader!../templates/processes/dashboard.html');
 var leftPaneTemplate = require('html-loader!../templates/processes/left-pane.html');
+var rabbitMQTemplate = require('html-loader!../templates/processes/rabbitmq.html');
 var airflowTemplate = require('html-loader!../templates/processes/airflow.html');
 
 var ProcessesView = Backbone.View.extend({
@@ -11,7 +12,8 @@ var ProcessesView = Backbone.View.extend({
     template: _.template(dashboardTemplate),
 
     events: {
-        'click .launch-airflow': 'showAirflowUI', //@TODO: Why is this event not being fired 
+        'click .launch-airflow': 'showAirflowUI', 
+        'click .launch-rabbitmq': 'showRabbitMQUI', 
     },
 
     tabId: 'tab_processes',
@@ -78,6 +80,25 @@ var ProcessesView = Backbone.View.extend({
             id: tabId,
             title: '<img src="'+airflowURL+'/static/pin_100.png" width="16px" class="img-icon"/> ' + ' Airflow',
             content: airflowTemplate
+        });
+        AppUI.I().Tabs().show({id: tabId});
+    },
+    
+    /**
+     * Launch RabbitMQ management UI
+     * 
+     * @returns 
+     */
+    showRabbitMQUI: function(){
+        var rabbitMQURL = 'http://192.168.99.100:15672';
+        
+        var tabId = this.tabId + "_rabbitmq";
+        var that = this;
+        
+        AppUI.I().Tabs().addTab({
+            id: tabId,
+            title: '<img src="'+rabbitMQURL+'/favicon.ico" width="16px" class="img-icon"/> ' + ' RabbitMQ',
+            content: rabbitMQTemplate
         });
         AppUI.I().Tabs().show({id: tabId});
     }

@@ -111,12 +111,26 @@ $(document).ajaxError(function( event, jqxhr, settings, thrownError ) {
 });
 
  ///
-//window.Stomp = require('stompjs');
-//window.SockJS = require('sockjs-client');
+window.Stomp = require('stompjs');
+window.SockJS = require('sockjs-client');
 
-/**
-var socket = new SockJS( window.API_URL + '/websocket');
-var stompClient = Stomp.over(socket);  
+var stompClient = Stomp.client('ws://192.168.99.100:15674/ws');
+
+
+
+//Rabbitmq does not support heartbeats
+//stompClient.heartbeat.outgoing = 0;
+//stompClient.heartbeat.incoming = 0;
+stompClient.debug = onDebug;
+
+
+
+//Start subscribing to the chat queue
+function onConnect() {
+  var id = stompClient.subscribe("/topic/bts-logs", function(d) {
+      console.log(d);
+  });
+}
 
  function connect() {
     stompClient.connect({}, function(frame) {
@@ -127,6 +141,23 @@ var stompClient = Stomp.over(socket);
     });
 }
 
+stompClient.connect("guest", "guest", onConnect, onError, "/");
+
+
+//Send a message to the chat queue
+function sendMsg() {
+  //var msg = document.getElementById('msg').value;
+  var msg = 'tst message';
+  stompClient.send('/topic/bts-logs', { "content-type": "text/plain" }, msg);
+}
+
+function onError(e) {
+  console.log("STOMP ERROR", e);
+}
+
+function onDebug(m) {
+  console.log("STOMP DEBUG", m);
+}
 function disconnect() {
     if(stompClient != null) {
         stompClient.disconnect();
@@ -136,9 +167,8 @@ function disconnect() {
 }
              
 function sendMessage() {
-    stompClient.send('/topic/export-status', {}, 
+    stompClient.send('/topic/bts-logs', {}, 
       JSON.stringify({'from':"client1", 'text':"texdt2"}));
 }
 
-connect();
-**/
+//connect();
