@@ -8,7 +8,7 @@ var SessionView = Backbone.View.extend({
 
     events: {
         'submit form.form-signin': 'login', //@TODO: Why is this event not being fired 
-        'click .logout': 'logout',
+        'click  .logout': 'logout',
         'click .bd-forgot-password-link': 'showResetPasswordForm'
     },
 
@@ -135,6 +135,7 @@ var SessionView = Backbone.View.extend({
     logout: function () {
         localStorage.clear();
         $('html').append(_.template(loginTemplate));
+        
     },
     
     resetPassword: function(event){

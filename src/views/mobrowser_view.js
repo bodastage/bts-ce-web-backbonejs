@@ -255,7 +255,8 @@ var MOBrowserView = Backbone.View.extend({
                         //Donwload button
                         $('#'+moDTId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
                         $('#'+moDTId + '_wrapper .dataTables_length .fa-download').click(function(){
-                            //moDataTable.api().ajax.reload();
+                            $('#' + tabId + " .bd-notice").html(AppUI.I().Alerts({close:true}).Info('File will download shortly...'));
+                            window.location.href = API_URL + '/api/managedobjects/download/' + moPk;
                         });
                          
                          

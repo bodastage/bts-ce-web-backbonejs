@@ -226,8 +226,8 @@ var NetworkManagementView = Backbone.View.extend({
 
         //Initialize datatable
         var nbrsDT = $('#dt_netmgt_all_relations').DataTable({
-            "scrollX": true,
-            "scrollY": true,
+//            "scrollX": true,
+//            "scrollY": true,
             "pagingType": 'full_numbers',
             "processing": true,
             "serverSide": true,
@@ -270,6 +270,12 @@ var NetworkManagementView = Backbone.View.extend({
                 $('#' + dtId + '_wrapper .dataTables_length .fa-refresh').click(function () {
                     nbrsDT.api().ajax.reload();
                 });
+                
+                //Donwload button
+                $('#' + dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                $('#' + dtId + '_wrapper .dataTables_length .fa-download').click(function () {
+                    //moDataTable.api().ajax.reload();
+                });
             }
         });//end
     },
@@ -298,8 +304,8 @@ var NetworkManagementView = Backbone.View.extend({
         var dtId = 'dt_all_network_nodes';
         //Initialize datatable
         var nodesDT = $('#dt_all_network_nodes').DataTable({
-            "scrollX": true,
-            "scrollY": true,
+//            "scrollX": true,
+//            "scrollY": true,
             "pagingType": 'full_numbers',
             "processing": true,
             "serverSide": true,
@@ -338,6 +344,13 @@ var NetworkManagementView = Backbone.View.extend({
                 $('#' + dtId + '_wrapper .dataTables_length .fa-refresh').click(function () {
                     nodesDT.api().ajax.reload();
                 });
+                
+                //Donwload button
+                $('#'+dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                $('#'+dtId + '_wrapper .dataTables_length .fa-download').click(function(){
+                    $('#' + tabId + " .bd-notice").html(AppUI.I().Alerts({close:true}).Info('File will download shortly...'));
+                    window.location.href = API_URL + '/api/network/download/nodes';
+                });
             }
         });//end
     },
@@ -367,8 +380,8 @@ var NetworkManagementView = Backbone.View.extend({
 
         //Initialize datatable
         var sitesDT = $('#dt_all_network_sites').DataTable({
-            "scrollX": true,
-            "scrollY": true,
+//            "scrollX": true,
+//            "scrollY": true,
             "pagingType": 'full_numbers',
             "processing": true,
             "serverSide": true,
@@ -402,6 +415,13 @@ var NetworkManagementView = Backbone.View.extend({
                 $('#' + dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Refresh"><i class="fa fa-refresh"></i></span>');
                 $('#' + dtId + '_wrapper .dataTables_length .fa-refresh').click(function () {
                     sitesDT.api().ajax.reload();
+                });
+                
+                //Donwload button
+                $('#'+dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
+                $('#'+dtId + '_wrapper .dataTables_length .fa-download').click(function(){
+                    $('#' + tabId + " .bd-notice").html(AppUI.I().Alerts({close:true}).Info('File will download shortly...'));
+                    window.location.href = API_URL + '/api/network/download/sites';
                 });
             }
         });//end
@@ -444,14 +464,14 @@ var NetworkManagementView = Backbone.View.extend({
                 //Construct the tr data and also populate moFields
                 _(data).each(function (field) {
                     tr += '<th>' + field + '</th>';
-                    fields.push({name: field, data: field});
+                    fields.push({name: field, data: field, title: field.toUpperCase()});
                 });
                 tr = '<tr>' + tr + '</tr>';
 
                 //Build table
                 var tableHtml = '<table id="dt_ntwk_3g_cell_params" class="table table-striped table-bordered dataTable" width="100%">';
                 tableHtml += '<thead>' + tr + '</thead>';
-                tableHtml += '<tfoot>' + tr + '</tfoot>';
+                tableHtml += '<tfoot class="hidden">' + tr + '</tfoot>';
                 tableHtml += '</table>';
 
                 //Add html to tab content area
@@ -539,7 +559,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Construct the tr data and also populate moFields
                 _(data).each(function (field) {
                     tr += '<th>' + field + '</th>';
-                    fields.push({name: field, data: field});
+                    fields.push({name: field, data: field, title: field.toUpperCase()});
                 });
                 tr = '<tr>' + tr + '</tr>';
 
@@ -629,7 +649,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Construct the tr data and also populate moFields
                 _(data).each(function (field) {
                     tr += '<th>' + field + '</th>';
-                    fields.push({name: field, data: field});
+                    fields.push({name: field, data: field, title: field.toUpperCase()});
                 });
                 tr = '<tr>' + tr + '</tr>';
 
@@ -637,7 +657,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Build table
                 var tableHtml = '<table id="dt_ntwk_4g_cell_params" class="table table-striped table-bordered dataTable" width="100%">';
                 tableHtml += '<thead>' + tr + '</thead>';
-                tableHtml += '<tfoot>' + tr + '</tfoot>';
+                tableHtml += '<tfoot class="hidden">' + tr + '</tfoot>';
                 tableHtml += '</table>';
 
                 //Add html to tab content area
@@ -721,7 +741,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Construct the tr data and also populate moFields
                 _(data).each(function (field) {
                     tr += '<th>' + field + '</th>';
-                    fields.push({name: field, data: field});
+                    fields.push({name: field, data: field, title: field.toUpperCase()});
                 });
                 tr = '<tr>' + tr + '</tr>';
 
@@ -813,7 +833,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Construct the tr data and also populate moFields
                 _(data).each(function (field) {
                     tr += '<th>' + field + '</th>';
-                    fields.push({name: field, data: field});
+                    fields.push({name: field, data: field, title: field.toUpperCase()});
                 });
                 tr = '<tr>' + tr + '</tr>';
 
