@@ -274,7 +274,9 @@ var NetworkManagementView = Backbone.View.extend({
                 //Donwload button
                 $('#' + dtId + '_wrapper .dataTables_length').append(' <span class="btn btn-default" title="Download"><i class="fa fa-download"></i></span>');
                 $('#' + dtId + '_wrapper .dataTables_length .fa-download').click(function () {
-                    //moDataTable.api().ajax.reload();
+                    $('#' + tabId + " .bd-notice").html(AppUI.I().Alerts({close:true}).Info('File will download shortly...'));
+                    window.location.href = API_URL + '/api/network/download/relations';
+//                    window.open(API_URL + '/api/network/download/relations','_blank');
                 });
             }
         });//end

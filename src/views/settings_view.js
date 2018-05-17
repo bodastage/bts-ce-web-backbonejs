@@ -218,7 +218,7 @@ var SettingsView = Backbone.View.extend({
         var tabId = this.tabId + "_cm_file_fetch";
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: '<i class="fa fa-cog"></i> CM File Fetch',
+            title: '<i class="fa fa-cog"></i> CM File Directories',
             content: (_.template(CMFileFetchTmpl))()
         });
     },
@@ -234,7 +234,7 @@ var SettingsView = Backbone.View.extend({
         var tabId = this.tabId + "_cm_file_formats";
         AppUI.I().Tabs().addTab({
             id: tabId,
-            title: '<i class="fa fa-cog"></i> CM ETL File Formats',
+            title: '<i class="fa fa-cog"></i> CM Raw File Directories',
             content: (_.template(CMFileFormatsTmpl))()
         });
         
