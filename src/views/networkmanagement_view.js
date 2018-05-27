@@ -303,6 +303,11 @@ var NetworkManagementView = Backbone.View.extend({
             content: networkNodesTemplate
         });
 
+        //List of table fields for filtering
+        var tableFields = [
+            //{name:'nodename', data: 'nodename' , title: 'Name'}
+        ];
+        
         var dtId = 'dt_all_network_nodes';
         //Initialize datatable
         var nodesDT = $('#dt_all_network_nodes').DataTable({
@@ -353,6 +358,62 @@ var NetworkManagementView = Backbone.View.extend({
                     $('#' + tabId + " .bd-notice").html(AppUI.I().Alerts({close:true}).Info('File will download shortly...'));
                     window.location.href = API_URL + '/api/network/download/nodes';
                 });
+                
+                //Add per column filtering
+                _.forEach(tableFields, function(field, idx){
+
+                    //pk is hidden
+                    if(field.name === 'pk' || field.name === 'added_by' 
+                            || field.name === 'modified_by'){ return;}
+
+                     var filterCls='drop-target-'+field.name+'-'+dtId;
+                     var filterId ='drop_target_'+field.name +'_'+dtId;;
+
+                    var advancedFilterHtml = '\
+                    <div class="" class="advanced-filter" id="'+filterId+'">\
+                        <input type="text" placeholder="Search..." value="" \
+                            class="form-control per-column-search" data-column-index='+idx+' \
+                            data-column-name="'+field.name+'"/>\
+                        <div></div>\
+                    </div>\
+                    ';
+
+                    var dropInstance = new Drop({
+                        target: document.querySelector('.' + filterCls),
+                        content: advancedFilterHtml,
+                        classes: 'drop-theme-arrows',
+                        position: 'bottom center',
+                        openOn: 'click'
+                      });
+
+
+                    //Add filtering logic  
+                    $('body').on('input','#' +filterId+ ' input.per-column-search', function(){
+                        var colIdx = $(this).data('column-index');
+                        var colName= $(this).data('column-name');
+
+                        //@TODO: sanitize class name
+                        var filterCls='drop-target-'+colName+'-'+dtId;
+                        //var filterId ='drop_target_'+colName +'_'+moDTId;;
+
+
+                        nodesDT.api().column(colIdx).search($(this).val()).draw();
+                        var searchValue = $(this ).val();
+
+                        //Highlight wich columns have filters on by 
+                        //changing the filter color to blue
+                        if(searchValue != ""){
+                            $('.' + filterCls ).css("color","#2e6da4");
+                        }else{
+                            $('.' + filterCls ).css("color","#999996");
+                        }
+
+
+                    });
+                 });
+                 //eof:add per column filtering
+                 //----------------------------------+
+                         
             }
         });//end
     },
@@ -568,7 +629,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Build table
                 var tableHtml = '<table id="dt_ntwk_2g_cell_params" class="table table-striped table-bordered dataTable" width="100%">';
                 tableHtml += '<thead>' + tr + '</thead>';
-                tableHtml += '<tfoot>' + tr + '</tfoot>';
+                tableHtml += '<tfoot class="hidden">' + tr + '</tfoot>';
                 tableHtml += '</table>';
 
                 //Add html to tab content area
@@ -751,7 +812,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Build table
                 var tableHtml = '<table id="' + tableDTId + '" class="table table-striped table-bordered dataTable" width="100%">';
                 tableHtml += '<thead>' + tr + '</thead>';
-                tableHtml += '<tfoot>' + tr + '</tfoot>';
+                tableHtml += '<tfoot class="hidden">' + tr + '</tfoot>';
                 tableHtml += '</table>';
 
                 //Add html to tab content area
@@ -759,8 +820,8 @@ var NetworkManagementView = Backbone.View.extend({
 
                 //Initiate datatable to display rules data
                 var cellsDT = $('#' + tableDTId).DataTable({
-                    "scrollX": true,
-                    "scrollY": true,
+//                    "scrollX": true,
+//                    "scrollY": true,
                     "pagingType": 'full_numbers',
                     "processing": true,
                     "serverSide": true,
@@ -843,7 +904,7 @@ var NetworkManagementView = Backbone.View.extend({
                 //Build table
                 var tableHtml = '<table id="' + tableDTId + '" class="table table-striped table-bordered dataTable" width="100%">';
                 tableHtml += '<thead>' + tr + '</thead>';
-                tableHtml += '<tfoot>' + tr + '</tfoot>';
+                tableHtml += '<tfoot class="hidden">' + tr + '</tfoot>';
                 tableHtml += '</table>';
 
                 //Add html to tab content area
@@ -851,8 +912,8 @@ var NetworkManagementView = Backbone.View.extend({
 
                 //Initiate datatable to display rules data
                 var cellsDT = $('#' + tableDTId).DataTable({
-                    "scrollX": true,
-                    "scrollY": true,
+//                    "scrollX": true,
+//                    "scrollY": true,
                     "pagingType": 'full_numbers',
                     "processing": true,
                     "serverSide": true,
