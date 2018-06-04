@@ -28,6 +28,7 @@ var SettingsView = Backbone.View.extend({
         "click .show-cm-file-fetch": "showFileFetch",
         "click .show-cm-file-formats": "showCMFileFormats",
         "click .show-supported-vendors-techs": "showSupportedVendorTechs",
+        "click .run-cm-etlp": "runCMETLP"
     },
     
     /**
@@ -595,6 +596,35 @@ var SettingsView = Backbone.View.extend({
             
         });
         
+    },
+    
+    /**
+     * Trigger CM ETL processes
+     * 
+     * @returns {undefined}
+     */
+    runCMETLP: function(){
+       var tabId = this.tabId + "_cm_schedule";
+       
+       $('#' + tabId).find('.bd-notice').html(AppUI.I().Loading('Starting Configuratiom management processes...'));
+       
+       $.ajax({
+           "url": window.API_URL + '/api/settings/cm/run',
+           "type": "GET",
+           "success": function(data, xjhr, status){
+                $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                    .Alerts({close:true})
+                    .Success("Configuratiom management processes started. Go to Processes > Airflow > cm_etlp to monitor progress ")
+                );    
+           },
+           error: function(){
+                $('#' + tabId).find('.bd-notice').html(AppUI.I()
+                    .Alerts({close:true})
+                    .Error("Error occured. Trying again or log support request.")
+                );    
+           }
+           
+       }); 
     }
 
 });
