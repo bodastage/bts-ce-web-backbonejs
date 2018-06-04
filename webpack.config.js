@@ -66,7 +66,7 @@ const config = {
             template: __dirname + '/src/index.html'
         }),
         //new ExtractTextPlugin("styles.css"),
-        new FaviconsWebpackPlugin('./src/images/antenna_blue_64.png'),
+        new FaviconsWebpackPlugin('./src/images/btsce-logo-selection.png'),
         new UglifyJsPlugin()
     ]
 };
