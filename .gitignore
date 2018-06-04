@@ -2,5 +2,5 @@
 /nbproject/private/
 /node_modules
 /nbproject
-/dist/
+#/dist/
 *.log
