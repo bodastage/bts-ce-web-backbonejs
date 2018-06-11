@@ -93,7 +93,7 @@ var SessionView = Backbone.View.extend({
             "success": function(data, textStatus, jqXHR ){
                 
                 if(jqXHR.status === 204 ){
-                    $('.form-signin-notices').html(AppUI.I().Alerts({close:true}).Info('<i class="fa fa-spinner  fa-spin fa-fw"></i> Database is still starting up...Try again in 3 minutes'))
+                    $('.form-signin-notices').html(AppUI.I().Alerts({close:true}).Info('<i class="fa fa-spinner  fa-spin fa-fw"></i> Database is still starting up...Try again in 5 minutes'))
                     $('html').find('form.form-signin [type=submit]').html('Sign in');
                     return;
                 }
