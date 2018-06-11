@@ -91,6 +91,13 @@ var SessionView = Backbone.View.extend({
                 'password': $('html').find('form.form-signin input[name=session_password]').val()
             },
             "success": function(data, textStatus, jqXHR ){
+                
+                if(jqXHR.status === 204 ){
+                    $('.form-signin-notices').html(AppUI.I().Alerts({close:true}).Info('<i class="fa fa-spinner  fa-spin fa-fw"></i> Database is still starting up...Try again in 3 minutes'))
+                    $('html').find('form.form-signin [type=submit]').html('Sign in');
+                    return;
+                }
+                
                 localStorage.setItem("id", data.id);
                 localStorage.setItem("firstName", data.first_name);
                 localStorage.setItem("lastName", data.last_name);
@@ -106,6 +113,8 @@ var SessionView = Backbone.View.extend({
             },
             "error": function(jqXHR, textStatus, errorThrown ){
                 try{
+                    console.log(jqXHR);
+                    console.log(textStatus);
                 var response = JSON.parse(jqXHR.responseText);
                     $('.form-signin-notices').html(AppUI.I().Alerts({close:true}).Error(response.message))
                 }catch(e){

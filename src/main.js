@@ -88,7 +88,12 @@ $('#bd_nav_tab').sortable();
  
 //Register global callback for unauthenticated api requests
 $(document).ajaxError(function( event, jqxhr, settings, thrownError ) {
-    if(jqxhr === 401){
+    //Stop here if dialog is already open
+    if($('.jconfirm-box').length > 0){
+        return;
+    }
+    
+    if(jqxhr.status === 401){
         $.confirm({
             "icon": 'fa fa-warning',
             "title": "Authentication required",
