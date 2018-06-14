@@ -4,7 +4,8 @@ const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var resolvePath = require('resolve-path');
 
 const config = {
     entry: [
@@ -16,13 +17,25 @@ const config = {
             leaflet_css: __dirname + "/node_modules/leaflet/dist/leaflet.css",
             leaflet_marker: __dirname + "/node_modules/leaflet/dist/images/marker-icon.png",
             leaflet_marker_2x: __dirname + "/node_modules/leaflet/dist/images/marker-icon-2x.png",
-            leaflet_marker_shadow: __dirname + "/node_modules/leaflet/dist/images/marker-shadow.png"
+            leaflet_marker_shadow: __dirname + "/node_modules/leaflet/dist/images/marker-shadow.png",
+            'fuelux/checkbox': resolvePath(__dirname, 'node_modules/fuelux/js/checkbox'),
+            'fuelux/combobox': resolvePath(__dirname, 'node_modules/fuelux/js/combobox'),
+            'fuelux/datepicker': resolvePath(__dirname, 'node_modules/fuelux/js/datepicker'),
+            'fuelux/dropdown-autoflip': resolvePath(__dirname, 'node_modules/fuelux/js/dropdown-autoflip'),
+            'fuelux/infinite-scroll': resolvePath(__dirname, 'node_modules/fuelux/js/infinite-scroll'),
+            'fuelux/loader': resolvePath(__dirname, 'node_modules/fuelux/js/loader'),
+            'fuelux/radio': resolvePath(__dirname, 'node_modules/fuelux/js/radio'),
+            'fuelux/repeater': resolvePath(__dirname, 'node_modules/fuelux/js/repeater'),
+            'fuelux/search': resolvePath(__dirname, 'node_modules/fuelux/js/search'),
+            'fuelux/selectlist': resolvePath(__dirname, 'node_modules/fuelux/js/selectlist'),
+            'fuelux/spinbox': resolvePath(__dirname, 'node_modules/fuelux/js/spinbox'),
+            'fuelux/utilities': resolvePath(__dirname, 'node_modules/fuelux/js/utilities'),
         }
     },
     devtool: 'inline-source-map',
     devServer: {
         contentBase: './dist'
-    },
+    },  
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -40,10 +53,7 @@ const config = {
             {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml'},
             {test: /tabdrop/, loader: "imports-loader?define=>undefined,exports=>undefined" },
             {test: /\.(png|jpg|gif)$/, use: [{loader: 'url-loader',options: {limit: 8192}}]},
-            {
-              test: /fuelux\/js\/.*\.js$/,
-              use: ['imports-loader?define=>false']
-            }
+            {test: /fuelux\/js\/.*\.js$/,use: ['imports-loader?define=>false']}
         ],
         loaders: [
             {test: /\.css$/, loader: "style-loader!css-loader"},
