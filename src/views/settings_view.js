@@ -94,8 +94,8 @@ var SettingsView = Backbone.View.extend({
      * Show CM schedule
      */
     showCMSchedule: function(){
-        require('fuelux/dist/css/fuelux.min.css');
-        var fueluxScheduler = require('fuelux/js/scheduler');
+        require('fuelux_css');
+        var fueluxScheduler = require('fuelux/scheduler');
         
         var that = this;
         var tabId = this.tabId + "_cm_schedule";
