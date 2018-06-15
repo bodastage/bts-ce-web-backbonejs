@@ -5,7 +5,6 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-var resolvePath = require('resolve-path');
 
 const config = {
     entry: [

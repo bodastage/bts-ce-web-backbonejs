@@ -20,7 +20,7 @@ require("leaflet_marker");
 require("leaflet_marker_2x");
 require("leaflet_marker_shadow");
 require("leaflet-semicircle"); 
-require("leaflet.heat");
+
 /**
  * 
  * @type Module router|Module router
